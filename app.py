@@ -56,11 +56,35 @@ def get_vending_machines():
 # WebSocket events
 @socketio.on('connect')
 def handle_connect():
-    print("Client connected")
+    vending_machine_code = request.args.get('code')  # Get ?code= from URL
+    print(f"Client connected with code: {vending_machine_code}")
+    
+    if vending_machine_code:
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            "UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s",
+            (vending_machine_code,)
+        )
+        mysql.connection.commit()
+        cursor.close()
+    else:
+        print("No vending machine code provided in query params.")
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    print("Client disconnected")
+    vending_machine_code = request.args.get('code')  # Get ?code= again
+    print(f"Client disconnected with code: {vending_machine_code}")
+    
+    if vending_machine_code:
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            "UPDATE vendingmachines SET state = 0 WHERE vendingMachineCode = %s",
+            (vending_machine_code,)
+        )
+        mysql.connection.commit()
+        cursor.close()
+    else:
+        print("No vending machine code provided on disconnect.")
 
 @socketio.on('message')
 def handle_message(data):
