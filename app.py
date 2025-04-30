@@ -56,35 +56,37 @@ def get_vending_machines():
 # WebSocket events
 @socketio.on('connect')
 def handle_connect():
-    vending_machine_code = request.args.get('code')  # Get ?code= from URL
-    print(f"Client connected with code: {vending_machine_code}")
+    code = request.args.get('code')
+    if not code:
+        print("Connection refused: missing code")
+        return False  # reject the connection
+
+    # Connect to your database
+    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
+    cur = conn.cursor()
     
-    if vending_machine_code:
-        cursor = mysql.connection.cursor()
-        cursor.execute(
-            "UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s",
-            (vending_machine_code,)
-        )
-        mysql.connection.commit()
-        cursor.close()
-    else:
-        print("No vending machine code provided in query params.")
+    # Update vending machine state to online (1)
+    cur.execute("UPDATE vendingmachines SET state = 1 WHERE code = %s", (code,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    
+    print(f"Client connected with code: {code}")
+    emit('connected', {'message': 'Connection accepted'})  # Important! Tell client connection is accepted.
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    vending_machine_code = request.args.get('code')  # Get ?code= again
-    print(f"Client disconnected with code: {vending_machine_code}")
-    
-    if vending_machine_code:
-        cursor = mysql.connection.cursor()
-        cursor.execute(
-            "UPDATE vendingmachines SET state = 0 WHERE vendingMachineCode = %s",
-            (vending_machine_code,)
-        )
-        mysql.connection.commit()
-        cursor.close()
-    else:
-        print("No vending machine code provided on disconnect.")
+    code = request.args.get('code')
+    if code:
+        conn = psycopg2.connect(os.getenv('DATABASE_URL'))
+        cur = conn.cursor()
+        # Update vending machine state to offline (0)
+        cur.execute("UPDATE vendingmachines SET state = 0 WHERE code = %s", (code,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        
+    print(f"Client disconnected with code: {code}")
 
 @socketio.on('message')
 def handle_message(data):
