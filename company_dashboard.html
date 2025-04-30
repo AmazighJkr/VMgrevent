@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vending Machine Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container dashboard-container">
+    <h2 class="text-center mb-4">Company Dashboard</h2>
+
+    <h2 class="text-center mb-4">Dashboard for {{ company_name }}</h2>
+
+    <!-- Machine Selection Form -->
+    <form method="POST" action="{{ url_for('company_dashboard') }}">
+        <label for="machineSelect" class="form-label">Select Vending Machine:</label>
+        <select class="form-select" id="machineSelect" name="machine" onchange="this.form.submit()">
+            {% for machine in machines %}
+                <option value="{{ machine.id }}" {% if selected_machine|int == machine.id %}selected{% endif %}>
+                    {{ machine.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <noscript><input type="submit" value="Select Machine"></noscript>
+    </form>
+
+    <!-- Sales Table -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Sales History</h4>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Product Code</th>
+                        <th>Sale Price (Dinars)</th>
+                        <th>Sale Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales %}
+                    <tr>
+                        <td>{{ sale[1] }}</td>  <!-- Product Name -->
+                        <td>{{ sale[0] }}</td>  <!-- Product Code -->
+                        <td>{{ sale[2] }} Dinars</td>  <!-- Sale Price -->
+                        <td>{{ sale[3] }}</td>  <!-- Sale Time -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Price Update Section -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Update Product Prices</h4>
+
+            <!-- Price Update Form -->
+            <form method="POST" action="{{ url_for('update_prices') }}">
+                <input type="hidden" name="machine" value="{{ selected_machine }}">
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Product Code</th>
+                            <th>Current Price (Dinars)</th>
+                            <th>New Price (Dinars)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{ product[1] }}</td>  <!-- Product Name -->
+                            <td>{{ product[0] }}</td>  <!-- Product Code -->
+                            <td>{{ product[2] }} Dinars</td>  <!-- Current Price -->
+                            <td>
+                                <input type="number" class="form-control" name="price_{{ product[0] }}" value="{{ product[2] }}">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button class="btn btn-primary w-100" type="submit">Update Prices</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
