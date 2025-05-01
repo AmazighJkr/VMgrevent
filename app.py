@@ -3,7 +3,7 @@ pymysql.install_as_MySQLdb()
 
 from flask import Flask, request, jsonify, session, redirect, url_for, render_template
 from flask_cors import CORS
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, disconnect
 import json
 import os
 from flask_mysqldb import MySQL
@@ -66,6 +66,10 @@ def handle_connect():
         cursor = mysql.connection.cursor()
         cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
         mysql.connection.commit()
+
+        # Save code in the Socket.IO session for later use
+        session['code'] = code
+
         print(f"Client connected with code: {code}")
         emit('connected', {'message': 'Connection accepted'})
     except Exception as e:
@@ -76,7 +80,7 @@ def handle_connect():
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    code = request.args.get('code')
+    code = session.get('code')  # <-- get it from session, not request.args
     if code:
         cursor = None
         try:
@@ -89,7 +93,9 @@ def handle_disconnect():
         finally:
             if cursor:
                 cursor.close()
-
+    else:
+        print("Disconnect event received but no code found in session")
+        
 @socketio.on('message')
 def handle_message(data):
     try:
