@@ -55,8 +55,8 @@ def get_vending_machines():
 
 # WebSocket events
 @socketio.on('connect')
-def handle_connect(auth):
-    code = auth.get('code') if auth else None
+def handle_connect():
+    code = request.args.get('code')
     if not code:
         print("Connection refused: missing code")
         return False  # reject the connection
