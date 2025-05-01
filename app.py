@@ -61,32 +61,34 @@ def handle_connect():
         print("Connection refused: missing code")
         return False  # reject the connection
 
-    # Connect to your database
-    conn = psycopg2.connect(os.getenv('DATABASE_URL'))
-    cur = conn.cursor()
-    
-    # Update vending machine state to online (1)
-    cur.execute("UPDATE vendingmachines SET state = 1 WHERE code = %s", (code,))
-    conn.commit()
-    cur.close()
-    conn.close()
-    
-    print(f"Client connected with code: {code}")
-    emit('connected', {'message': 'Connection accepted'})  # Important! Tell client connection is accepted.
+    cursor = None
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
+        mysql.connection.commit()
+        print(f"Client connected with code: {code}")
+        emit('connected', {'message': 'Connection accepted'})
+    except Exception as e:
+        print(f"Error updating machine on connect: {e}")
+    finally:
+        if cursor:
+            cursor.close()
 
 @socketio.on('disconnect')
 def handle_disconnect():
     code = request.args.get('code')
     if code:
-        conn = psycopg2.connect(os.getenv('DATABASE_URL'))
-        cur = conn.cursor()
-        # Update vending machine state to offline (0)
-        cur.execute("UPDATE vendingmachines SET state = 0 WHERE code = %s", (code,))
-        conn.commit()
-        cur.close()
-        conn.close()
-        
-    print(f"Client disconnected with code: {code}")
+        cursor = None
+        try:
+            cursor = mysql.connection.cursor()
+            cursor.execute("UPDATE vendingmachines SET state = 0 WHERE vendingMachineCode = %s", (code,))
+            mysql.connection.commit()
+            print(f"Client disconnected with code: {code}")
+        except Exception as e:
+            print(f"Error updating machine on disconnect: {e}")
+        finally:
+            if cursor:
+                cursor.close()
 
 @socketio.on('message')
 def handle_message(data):
