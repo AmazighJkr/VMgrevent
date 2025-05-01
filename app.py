@@ -54,9 +54,9 @@ def get_vending_machines():
             cursor.close()
 
 # WebSocket events
-@socketio.on('connect', namespace='/')
-def handle_connect():
-    code = request.args.get('code')
+@socketio.on('connect')
+def handle_connect(auth):
+    code = auth.get('code') if auth else None
     if not code:
         print("Connection refused: missing code")
         return False  # reject the connection
@@ -78,7 +78,7 @@ def handle_connect():
         if cursor:
             cursor.close()
 
-@socketio.on('disconnect', namespace='/')
+@socketio.on('disconnect')
 def handle_disconnect():
     code = session.get('code')  # <-- get it from session, not request.args
     if code:
