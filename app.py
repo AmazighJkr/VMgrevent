@@ -3,7 +3,7 @@ pymysql.install_as_MySQLdb()
 
 from flask import Flask, request, jsonify, session, redirect, url_for, render_template
 from flask_cors import CORS
-from flask_socketio import SocketIO, emit, disconnect
+from flask_socketio import SocketIO, emit, disconnect, get_session, save_session
 import json
 import os
 from flask_mysqldb import MySQL
@@ -61,14 +61,12 @@ def handle_connect(auth):
         print("Connection refused: missing code")
         return False
 
+    cursor = None
     try:
         cursor = mysql.connection.cursor()
         cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
         mysql.connection.commit()
-
-        # ✅ Store the code for this session ID
-        socketio.environ[request.sid]['vending_code'] = code
-
+        save_session({'code': code})  # ✅ Save code in socket session
         print(f"Client connected with code: {code}")
         emit('connected', {'message': 'Connection accepted'})
         return True
@@ -81,7 +79,12 @@ def handle_connect(auth):
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    code = socketio.environ.get(request.sid, {}).get('vending_code')  # ✅ This works
+    code = None
+    try:
+        code = get_session().get('code')  # ✅ Retrieve from socket session
+    except Exception as e:
+        print(f"Error retrieving session on disconnect: {e}")
+
     if code:
         try:
             cursor = mysql.connection.cursor()
@@ -95,7 +98,6 @@ def handle_disconnect():
     else:
         print("Disconnect event received but no code found")
 
-        
 @socketio.on('message')
 def handle_message(data):
     try:
