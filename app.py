@@ -57,32 +57,30 @@ def get_vending_machines():
 @socketio.on('connect')
 def handle_connect(auth):
     code = auth.get('code') if auth else None
+    print(f"Auth received during connection: {auth}")
     if not code:
         print("Connection refused: missing code")
-        return False  # reject the connection
+        return False
 
-    cursor = None
     try:
         cursor = mysql.connection.cursor()
         cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
         mysql.connection.commit()
 
-        # Save code in the Socket.IO session for later use
-        session['code'] = code
+        # Save code per client sid in the Socket.IO environment
+        request.environ['vending_code'] = code
 
         print(f"Client connected with code: {code}")
         emit('connected', {'message': 'Connection accepted'})
     except Exception as e:
         print(f"Error updating machine on connect: {e}")
     finally:
-        if cursor:
-            cursor.close()
+        cursor.close()
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    code = session.get('code')  # <-- get it from session, not request.args
+    code = request.environ.get('vending_code')  # Get code from the same place
     if code:
-        cursor = None
         try:
             cursor = mysql.connection.cursor()
             cursor.execute("UPDATE vendingmachines SET state = 0 WHERE vendingMachineCode = %s", (code,))
@@ -91,10 +89,10 @@ def handle_disconnect():
         except Exception as e:
             print(f"Error updating machine on disconnect: {e}")
         finally:
-            if cursor:
-                cursor.close()
+            cursor.close()
     else:
-        print("Disconnect event received but no code found in session")
+        print("Disconnect event received but no code found")
+
         
 @socketio.on('message')
 def handle_message(data):
