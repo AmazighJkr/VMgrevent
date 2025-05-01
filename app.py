@@ -57,25 +57,25 @@ def get_vending_machines():
 @socketio.on('connect')
 def handle_connect(auth):
     code = auth.get('code') if auth else None
-    print(f"Auth received during connection: {auth}")
     if not code:
         print("Connection refused: missing code")
-        return False
+        return False  # reject the connection
 
+    cursor = None
     try:
         cursor = mysql.connection.cursor()
         cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
         mysql.connection.commit()
-
-        # Save code per client sid in the Socket.IO environment
-        request.environ['vending_code'] = code
-
+        session['code'] = code
         print(f"Client connected with code: {code}")
         emit('connected', {'message': 'Connection accepted'})
+        return True  # ✅ Ensure you return True to confirm connection
     except Exception as e:
         print(f"Error updating machine on connect: {e}")
+        return False  # reject if there's a DB issue
     finally:
-        cursor.close()
+        if cursor:
+            cursor.close()
 
 @socketio.on('disconnect')
 def handle_disconnect():
