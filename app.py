@@ -3,7 +3,7 @@ pymysql.install_as_MySQLdb()
 
 from flask import Flask, request, jsonify, session, redirect, url_for, render_template
 from flask_cors import CORS
-from flask_socketio import SocketIO, emit, disconnect, get_session, save_session
+from flask_socketio import SocketIO, emit, disconnect
 import json
 import os
 from flask_mysqldb import MySQL
