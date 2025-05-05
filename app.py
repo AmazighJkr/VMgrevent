@@ -61,12 +61,13 @@ def handle_connect(auth):
         print("Connection refused: missing code")
         return False
 
-    cursor = None
     try:
         cursor = mysql.connection.cursor()
         cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
         mysql.connection.commit()
-        save_session({'code': code})  # ✅ Save code in socket session
+
+        session['code'] = code  # ✅ Use Flask's session instead of save_session()
+
         print(f"Client connected with code: {code}")
         emit('connected', {'message': 'Connection accepted'})
         return True
@@ -74,17 +75,12 @@ def handle_connect(auth):
         print(f"Error updating machine on connect: {e}")
         return False
     finally:
-        if cursor:
-            cursor.close()
+        cursor.close()
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    code = None
-    try:
-        code = get_session().get('code')  # ✅ Retrieve from socket session
-    except Exception as e:
-        print(f"Error retrieving session on disconnect: {e}")
-
+    code = session.get('code')  # ✅ Use Flask's session instead of get_session()
+    
     if code:
         try:
             cursor = mysql.connection.cursor()
@@ -97,7 +93,6 @@ def handle_disconnect():
             cursor.close()
     else:
         print("Disconnect event received but no code found")
-
 @socketio.on('message')
 def handle_message(data):
     try:
