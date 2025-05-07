@@ -56,30 +56,36 @@ def get_vending_machines():
 # WebSocket events
 @socketio.on('connect')
 def handle_connect(auth):
+    # ❗ SAFELY get the 'code' from 'auth'
     code = auth.get('code') if auth else None
+
     if not code:
         print("Connection refused: missing code")
-        return False
+        return False  # Disconnect immediately
 
     try:
         cursor = mysql.connection.cursor()
         cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
         mysql.connection.commit()
 
-        session['code'] = code  # ✅ Store code in Flask's session
+        # ❗ Store the vending machine code inside the Flask session
+        session['code'] = code
 
         print(f"Client connected with code: {code}")
         emit('connected', {'message': 'Connection accepted'})
         return True
+
     except Exception as e:
         print(f"Error updating machine on connect: {e}")
         return False
+
     finally:
         cursor.close()
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    code = session.get('code')  # ✅ Retrieve from Flask session
+    # ❗ Retrieve the code from session
+    code = session.get('code')
 
     if code:
         try:
@@ -87,8 +93,10 @@ def handle_disconnect():
             cursor.execute("UPDATE vendingmachines SET state = 0 WHERE vendingMachineCode = %s", (code,))
             mysql.connection.commit()
             print(f"Client disconnected with code: {code}")
+
         except Exception as e:
             print(f"Error updating machine on disconnect: {e}")
+
         finally:
             cursor.close()
     else:
