@@ -80,30 +80,39 @@ def handle_disconnect():
 
 @socketio.on('register_vm')
 def handle_register_vm(data):
+    # Retrieve the code from the emitted data
     code = data.get('code')
 
+    # If no code is provided, log and exit early
     if not code:
         print("Register failed: No code provided")
-        disconnect()
         return
 
     try:
+        print(f"Attempting to register vending machine with code: {code}")
+
+        # Open a cursor and update the vending machine state to 'online'
         cursor = mysql.connection.cursor()
         cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
         mysql.connection.commit()
 
-        # ❗ Store the code in the Flask session
+        # Store the code in Flask session
         session['code'] = code
 
         print(f"Vending machine {code} registered successfully and marked online.")
+        # Emit success response to client
         emit('registered', {'message': 'Registered successfully'})
 
     except Exception as e:
+        # If any exception occurs, log it and handle gracefully
         print(f"Error during register_vm: {e}")
+        emit('error', {'message': 'Failed to register vending machine'})
+        # Optionally, disconnect only in case of a fatal error
         disconnect()
 
     finally:
         cursor.close()
+
         
 @socketio.on('message')
 def handle_message(data):
