@@ -55,52 +55,55 @@ def get_vending_machines():
 
 # WebSocket events
 @socketio.on('connect')
-def handle_connect(auth):
-    # ❗ SAFELY get the 'code' from 'auth'
-    code = auth.get('code') if auth else None
+def handle_connect():
+    print("Client connected without auth.")
+    # Simply accept the connection, no need to check 'auth' anymore
+    emit('connected', {'message': 'Connection accepted'})
 
-    if not code:
-        print("Connection refused: missing code")
-        return False  # Disconnect immediately
-
-    try:
-        cursor = mysql.connection.cursor()
-        cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
-        mysql.connection.commit()
-
-        # ❗ Store the vending machine code inside the Flask session
-        session['code'] = code
-
-        print(f"Client connected with code: {code}")
-        emit('connected', {'message': 'Connection accepted'})
-        return True
-
-    except Exception as e:
-        print(f"Error updating machine on connect: {e}")
-        return False
-
-    finally:
-        cursor.close()
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    # ❗ Retrieve the code from session
     code = session.get('code')
-
     if code:
         try:
             cursor = mysql.connection.cursor()
             cursor.execute("UPDATE vendingmachines SET state = 0 WHERE vendingMachineCode = %s", (code,))
             mysql.connection.commit()
             print(f"Client disconnected with code: {code}")
-
         except Exception as e:
             print(f"Error updating machine on disconnect: {e}")
-
         finally:
             cursor.close()
     else:
         print("Disconnect event received but no code found")
+
+
+@socketio.on('register_vm')
+def handle_register_vm(data):
+    code = data.get('code')
+
+    if not code:
+        print("Register failed: No code provided")
+        disconnect()
+        return
+
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
+        mysql.connection.commit()
+
+        # ❗ Store the code in the Flask session
+        session['code'] = code
+
+        print(f"Vending machine {code} registered successfully and marked online.")
+        emit('registered', {'message': 'Registered successfully'})
+
+    except Exception as e:
+        print(f"Error during register_vm: {e}")
+        disconnect()
+
+    finally:
+        cursor.close()
         
 @socketio.on('message')
 def handle_message(data):
@@ -120,6 +123,8 @@ def handle_message(data):
     except Exception as e:
         print(f"WebSocket error: {e}")
         socketio.send(json.dumps({"error": str(e)}))
+
+
 
 # Sell product functionality
 def handle_sell_product(data):
