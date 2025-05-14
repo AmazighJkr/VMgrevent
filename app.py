@@ -9,7 +9,7 @@ import os
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 
-
+connected_vms = {}
 app = Flask(__name__, template_folder=".")  # Look for HTML files in the same directory
 CORS(app)
 bcrypt = Bcrypt(app)
