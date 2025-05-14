@@ -339,10 +339,20 @@ def company_dashboard():
     cur.execute(products_query, (machine_id,))
     products = cur.fetchall()
 
+    # ✅ Fetch vending machine state (online/offline)
+    cur.execute("SELECT state FROM vm_status WHERE vendingMachineId = %s", (machine_id,))
+    state_result = cur.fetchone()
+    vm_state = state_result[0] if state_result else 0  # Default to offline if not found
+
     cur.close()
 
-    return render_template('company_dashboard.html', company_name=company_name, sales=sales, products=products, selected_machine=machine_id, machines=machines)
-
+    return render_template('company_dashboard.html',
+                           company_name=company_name,
+                           sales=sales,
+                           products=products,
+                           selected_machine=machine_id,
+                           machines=machines,
+                           vm_state=vm_state)  # ✅ Send to HTML
 # Update Prices
 @app.route('/update_prices', methods=['POST'])
 def update_prices():
@@ -364,7 +374,19 @@ def update_prices():
             cur.execute(query, (new_price, product_code, machine_id))
 
     mysql.connection.commit()
+
+    # ✅ Emit updated prices to VM
+    query = f"SELECT productCode, productPrice FROM {table_name} WHERE vendingMachineId = %s"
+    cur.execute(query, (machine_id,))
+    updated_products = cur.fetchall()
     cur.close()
+
+    price_dict = {code: price for code, price in updated_products}
+
+    socketio.emit('update_prices', {
+        'machine_id': machine_id,
+        'prices': price_dict
+    }, room=f"vm_{company_id}_{machine_id}")  # Room format: vm_3_1
 
     return redirect(url_for('company_dashboard'))  # Refresh page
 
