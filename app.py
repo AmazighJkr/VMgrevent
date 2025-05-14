@@ -383,10 +383,25 @@ def update_prices():
 
     price_dict = {code: price for code, price in updated_products}
 
-    socketio.emit('update_prices', {
-        'machine_id': machine_id,
-        'prices': price_dict
-    }, room=f"vm_{company_id}_{machine_id}")  # Room format: vm_3_1
+    # Get the VM code using the machine_id
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT vendingMachineCode FROM vendingmachines WHERE vendingMachineId = %s", (machine_id,))
+    result = cur.fetchone()
+    cur.close()
+    
+    if result:
+        vm_code = result[0]
+        sid = connected_vms.get(vm_code)
+    
+        if sid:
+            socketio.emit('update_prices', {
+                'machine_id': machine_id,
+                'prices': price_dict
+            }, room=sid)
+        else:
+            print(f"VM {vm_code} is not connected.")
+    else:
+        print(f"No machine found with ID {machine_id}")
 
     return redirect(url_for('company_dashboard'))  # Refresh page
 
