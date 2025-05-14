@@ -16,6 +16,18 @@
     <!-- Machine Selection Form -->
     <form method="POST" action="{{ url_for('company_dashboard') }}">
         <label for="machineSelect" class="form-label">Select Vending Machine:</label>
+        <div class="d-flex align-items-center mb-2">
+            <select class="form-select me-3" id="machineSelect" name="machine" onchange="this.form.submit()">
+                {% for machine in machines %}
+                    <option value="{{ machine.id }}" {% if selected_machine|int == machine.id %}selected{% endif %}>
+                        {{ machine.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <span class="badge {% if selected_machine_status %}bg-success{% else %}bg-danger{% endif %}">
+                {% if selected_machine_status %}Online{% else %}Offline{% endif %}
+            </span>
+        </div>
         <select class="form-select" id="machineSelect" name="machine" onchange="this.form.submit()">
             {% for machine in machines %}
                 <option value="{{ machine.id }}" {% if selected_machine|int == machine.id %}selected{% endif %}>
@@ -84,7 +96,12 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <button class="btn btn-primary w-100" type="submit">Update Prices</button>
+                <button class="btn btn-primary w-100" type="submit" {% if not selected_machine_status %}disabled{% endif %}>
+                    Update Prices
+                </button>
+                {% if not selected_machine_status %}
+                <small class="text-danger d-block mt-2">You can only update prices when the vending machine is online.</small>
+                {% endif %}
             </form>
         </div>
     </div>
