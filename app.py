@@ -305,54 +305,60 @@ def company_dashboard():
     if 'user' not in session or session['user']['role'] != 'company':
         return redirect(url_for('login'))
 
-    company_id = session['user']['companyId']  # Get the company ID
+    company_id = session['user']['companyId']
 
-    # Fetch company name and the number of vending machines
     cur = mysql.connection.cursor()
     cur.execute("SELECT companyName, vendingMachineNum FROM companies WHERE companyId = %s", (company_id,))
     company_data = cur.fetchone()
     company_name = company_data[0]
-    vending_machine_num = company_data[1]  # The number of vending machines
+    vending_machine_num = company_data[1]
 
-    # Ensure machine_id is received correctly (default: first vending machine)
-    machine_id = request.form.get('machine', '1')
-
+    # Get selected machine from form (POST) or query param (GET)
+    machine_id = request.form.get('machine') or request.args.get('machine') or '1'
     try:
-        machine_id = int(machine_id)  # Convert to integer to avoid errors
+        machine_id = int(machine_id)
     except ValueError:
-        machine_id = 1  # Default to first vending machine
+        machine_id = 1
 
-    # Generate the list of vending machine IDs (e.g., [1, 2, 3] if vendingMachineNum = 3)
-    machines = [{"id": i, "name": f"Vending Machine {i}"} for i in range(1, vending_machine_num + 1)]
+    # Fetch online status of all machines
+    cur.execute("SELECT machineId, isOnline FROM vending_machine_status WHERE companyId = %s", (company_id,))
+    status_rows = cur.fetchall()
+    status_dict = {row[0]: row[1] for row in status_rows}  # {1: 1, 2: 0, ...}
 
-    # Tables for sales and products
+    machines = [
+        {
+            "id": i,
+            "name": f"Vending Machine {i}",
+            "is_online": status_dict.get(i, 0)  # default to offline if missing
+        } for i in range(1, vending_machine_num + 1)
+    ]
+
     sales_table = f"selles{company_id}"
     products_table = f"products{company_id}"
 
-    # Fetch sales data
     sales_query = f"SELECT productCode, productName, salePrice, saleTime FROM {sales_table} WHERE vendingMachineId = %s"
     cur.execute(sales_query, (machine_id,))
     sales = cur.fetchall()
 
-    # Fetch product prices
     products_query = f"SELECT productCode, productName, productPrice FROM {products_table} WHERE vendingMachineId = %s"
     cur.execute(products_query, (machine_id,))
     products = cur.fetchall()
 
-    # ✅ Fetch vending machine state (online/offline)
-    cur.execute("SELECT state FROM vm_status WHERE vendingMachineId = %s", (machine_id,))
-    state_result = cur.fetchone()
-    vm_state = state_result[0] if state_result else 0  # Default to offline if not found
-
     cur.close()
 
-    return render_template('company_dashboard.html',
-                           company_name=company_name,
-                           sales=sales,
-                           products=products,
-                           selected_machine=machine_id,
-                           machines=machines,
-                           vm_state=vm_state)  # ✅ Send to HTML
+    # Get status of selected machine
+    selected_machine_status = status_dict.get(machine_id, 0)
+
+    return render_template(
+        'company_dashboard.html',
+        company_name=company_name,
+        sales=sales,
+        products=products,
+        selected_machine=machine_id,
+        machines=machines,
+        selected_machine_status=selected_machine_status
+    )
+
 # Update Prices
 @app.route('/update_prices', methods=['POST'])
 def update_prices():
