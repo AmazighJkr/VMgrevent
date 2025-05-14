@@ -313,41 +313,38 @@ def company_dashboard():
     company_name = company_data[0]
     vending_machine_num = company_data[1]
 
-    # Get selected machine from form (POST) or query param (GET)
+    # Get selected machine ID from form (POST) or query param (GET)
     machine_id = request.form.get('machine') or request.args.get('machine') or '1'
     try:
         machine_id = int(machine_id)
     except ValueError:
         machine_id = 1
 
-    # Fetch online status of all machines
-    cur.execute("SELECT machineId, isOnline FROM vending_machine_status WHERE companyId = %s", (company_id,))
-    status_rows = cur.fetchall()
-    status_dict = {row[0]: row[1] for row in status_rows}  # {1: 1, 2: 0, ...}
-
+    # Get all vending machines for this company and their online status
+    cur.execute("SELECT vendingMachineId, vendingMachineCode, state FROM vendingmachines WHERE companyId = %s", (company_id,))
+    vm_rows = cur.fetchall()
     machines = [
         {
-            "id": i,
-            "name": f"Vending Machine {i}",
-            "is_online": status_dict.get(i, 0)  # default to offline if missing
-        } for i in range(1, vending_machine_num + 1)
+            "id": row[0],
+            "name": f"Vending Machine {row[1]}",  # using vendingMachineCode for name
+            "is_online": row[2]  # state: 1 = online, 0 = offline
+        } for row in vm_rows
     ]
 
+    # Find status of selected machine
+    selected_machine_status = next((m["is_online"] for m in machines if m["id"] == machine_id), 0)
+
+    # Sales and product tables (custom per company)
     sales_table = f"selles{company_id}"
     products_table = f"products{company_id}"
 
-    sales_query = f"SELECT productCode, productName, salePrice, saleTime FROM {sales_table} WHERE vendingMachineId = %s"
-    cur.execute(sales_query, (machine_id,))
+    cur.execute(f"SELECT productCode, productName, salePrice, saleTime FROM {sales_table} WHERE vendingMachineId = %s", (machine_id,))
     sales = cur.fetchall()
 
-    products_query = f"SELECT productCode, productName, productPrice FROM {products_table} WHERE vendingMachineId = %s"
-    cur.execute(products_query, (machine_id,))
+    cur.execute(f"SELECT productCode, productName, productPrice FROM {products_table} WHERE vendingMachineId = %s", (machine_id,))
     products = cur.fetchall()
 
     cur.close()
-
-    # Get status of selected machine
-    selected_machine_status = status_dict.get(machine_id, 0)
 
     return render_template(
         'company_dashboard.html',
