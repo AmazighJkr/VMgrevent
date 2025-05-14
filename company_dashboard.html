@@ -28,13 +28,6 @@
                 {% if selected_machine_status %}Online{% else %}Offline{% endif %}
             </span>
         </div>
-        <select class="form-select" id="machineSelect" name="machine" onchange="this.form.submit()">
-            {% for machine in machines %}
-                <option value="{{ machine.id }}" {% if selected_machine|int == machine.id %}selected{% endif %}>
-                    {{ machine.name }}
-                </option>
-            {% endfor %}
-        </select>
         <noscript><input type="submit" value="Select Machine"></noscript>
     </form>
 
