@@ -10,6 +10,8 @@ from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 
 connected_vms = {}
+sid_to_code = {}
+
 app = Flask(__name__, template_folder=".")  # Look for HTML files in the same directory
 CORS(app)
 bcrypt = Bcrypt(app)
@@ -63,10 +65,11 @@ def handle_connect():
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    code = session.get('code')
+    sid = request.sid
+    code = sid_to_code.pop(sid, None)
+
     if code:
         try:
-            # Remove from connected_vms dict if exists
             connected_vms.pop(code, None)
 
             cursor = mysql.connection.cursor()
@@ -78,9 +81,7 @@ def handle_disconnect():
         finally:
             cursor.close()
     else:
-        print("Disconnect event received but no code found")
-
-
+        print(f"Disconnect event received but no code found for sid {sid}")
 
 @socketio.on('register_vm')
 def handle_register_vm(data):
@@ -97,8 +98,9 @@ def handle_register_vm(data):
         cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
         mysql.connection.commit()
 
-        # Save sid in memory
+        # Save sid and code mapping
         connected_vms[code] = request.sid
+        sid_to_code[request.sid] = code
         print(f"VM {code} registered with sid {request.sid}")
 
         emit('registered', {'message': 'Registered successfully'})
