@@ -66,6 +66,9 @@ def handle_disconnect():
     code = session.get('code')
     if code:
         try:
+            # Remove from connected_vms dict if exists
+            connected_vms.pop(code, None)
+
             cursor = mysql.connection.cursor()
             cursor.execute("UPDATE vendingmachines SET state = 0 WHERE vendingMachineCode = %s", (code,))
             mysql.connection.commit()
@@ -78,12 +81,10 @@ def handle_disconnect():
         print("Disconnect event received but no code found")
 
 
+
 @socketio.on('register_vm')
 def handle_register_vm(data):
-    # Retrieve the code from the emitted data
     code = data.get('code')
-
-    # If no code is provided, log and exit early
     if not code:
         print("Register failed: No code provided")
         return
@@ -91,29 +92,25 @@ def handle_register_vm(data):
     try:
         print(f"Attempting to register vending machine with code: {code}")
 
-        # Open a cursor and update the vending machine state to 'online'
+        # Mark machine online in database
         cursor = mysql.connection.cursor()
         cursor.execute("UPDATE vendingmachines SET state = 1 WHERE vendingMachineCode = %s", (code,))
         mysql.connection.commit()
 
-        # Store the code in Flask session
-        session['code'] = code
+        # Save sid in memory
+        connected_vms[code] = request.sid
+        print(f"VM {code} registered with sid {request.sid}")
 
-        print(f"Vending machine {code} registered successfully and marked online.")
-        # Emit success response to client
         emit('registered', {'message': 'Registered successfully'})
 
     except Exception as e:
-        # If any exception occurs, log it and handle gracefully
         print(f"Error during register_vm: {e}")
         emit('error', {'message': 'Failed to register vending machine'})
-        # Optionally, disconnect only in case of a fatal error
         disconnect()
 
     finally:
         cursor.close()
 
-        
 @socketio.on('message')
 def handle_message(data):
     try:
