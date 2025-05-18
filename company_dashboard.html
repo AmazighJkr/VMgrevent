@@ -10,38 +10,31 @@
     body {
       background-color: #f8f9fa;
     }
-
     .dashboard-container {
       padding-top: 80px;
       padding-bottom: 60px;
     }
-
     .card {
       box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
     }
-
     .scrollable-table {
       max-height: 300px;
       overflow-y: auto;
     }
-
     .scrollable-table thead th {
       position: sticky;
       top: 0;
       background-color: #f8f9fa;
     }
-
     footer {
       background-color: #343a40;
       color: #fff;
       padding: 30px 0;
     }
-
     footer a {
       color: #adb5bd;
       text-decoration: none;
     }
-
     footer a:hover {
       color: #fff;
     }
@@ -69,18 +62,39 @@
     <label for="machineSelect" class="form-label">Select Vending Machine:</label>
     <div class="d-flex align-items-center mb-3">
       <select class="form-select me-3" id="machineSelect" name="machine" onchange="this.form.submit()">
+        <option value="all" {% if selected_machine == 'all' %}selected{% endif %}>All Machines</option>
         {% for machine in machines %}
         <option value="{{ machine.id }}" {% if selected_machine|int == machine.id %}selected{% endif %}>
           {{ machine.name }}
         </option>
         {% endfor %}
       </select>
+      {% if selected_machine != 'all' %}
       <span class="badge {% if selected_machine_status %}bg-success{% else %}bg-danger{% endif %}">
         {% if selected_machine_status %}Online{% else %}Offline{% endif %}
       </span>
+      {% endif %}
     </div>
-    <noscript><input type="submit" value="Select Machine" class="btn btn-primary"></noscript>
+
+    <!-- Time Filter Dropdown -->
+    <label for="timeRange" class="form-label">Select Time Range:</label>
+    <select class="form-select mb-3" id="timeRange" name="time_range" onchange="this.form.submit()">
+      <option value="daily" {% if time_range == 'daily' %}selected{% endif %}>Daily</option>
+      <option value="weekly" {% if time_range == 'weekly' %}selected{% endif %}>Weekly</option>
+      <option value="monthly" {% if time_range == 'monthly' %}selected{% endif %}>Monthly</option>
+      <option value="yearly" {% if time_range == 'yearly' %}selected{% endif %}>Yearly</option>
+    </select>
+
+    <noscript><input type="submit" value="Apply Filters" class="btn btn-primary"></noscript>
   </form>
+
+  <!-- Income Summary -->
+  <div class="card mt-4">
+    <div class="card-body text-center">
+      <h5 class="card-title"><i class="bi bi-cash-coin me-2"></i>Total Income - {{ time_range|capitalize }}</h5>
+      <h2 class="text-success">{{ income_total }} Dinars</h2>
+    </div>
+  </div>
 
   <!-- Sales Table -->
   <div class="card mt-4">
@@ -112,6 +126,7 @@
   </div>
 
   <!-- Price Update Section -->
+  {% if selected_machine != 'all' %}
   <div class="card mt-4">
     <div class="card-body">
       <h5 class="card-title mb-3"><i class="bi bi-tag me-2"></i>Update Product Prices</h5>
@@ -152,6 +167,7 @@
       </form>
     </div>
   </div>
+  {% endif %}
 </div>
 
 <!-- Footer -->
