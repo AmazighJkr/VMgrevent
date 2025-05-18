@@ -308,122 +308,54 @@ def company_dashboard():
     company_id = session['user']['companyId']
 
     cur = mysql.connection.cursor()
+    cur.execute("SELECT companyName, vendingMachineNum FROM companies WHERE companyId = %s", (company_id,))
+    company_data = cur.fetchone()
+    company_name = company_data[0]
+    vending_machine_num = company_data[1]
 
-    # Get company name and number of vending machines
+    # Get selected machine ID from form (POST) or query param (GET)
+    machine_id = request.form.get('machine') or request.args.get('machine') or '1'
     try:
-        cur.execute("SELECT companyName, vendingMachineNum FROM companies WHERE companyId = %s", (company_id,))
-        company_data = cur.fetchone()
-        if not company_data:
-            flash("Company not found.", "danger")
-            return redirect(url_for('login'))
-        company_name, vending_machine_num = company_data
-    except Exception as e:
-        flash(f"Error fetching company data: {e}", "danger")
-        return redirect(url_for('login'))
+        machine_id = int(machine_id)
+    except ValueError:
+        machine_id = 1
 
-    # Get all vending machines for this company
-    try:
-        cur.execute("SELECT vendingMachineId, vendingMachineCode, state FROM vendingmachines WHERE companyId = %s", (company_id,))
-        vm_rows = cur.fetchall()
-        if not vm_rows:
-            flash("No vending machines found for your company.", "warning")
-            return render_template('company_dashboard.html', company_name=company_name)
-    except Exception as e:
-        flash(f"Error fetching vending machines: {e}", "danger")
-        return render_template('company_dashboard.html', company_name=company_name)
-
+    # Get all vending machines for this company and their online status
+    cur.execute("SELECT vendingMachineId, vendingMachineCode, state FROM vendingmachines WHERE companyId = %s", (company_id,))
+    vm_rows = cur.fetchall()
     machines = [
         {
             "id": row[0],
-            "name": f"Vending Machine {row[1]}",  # using vendingMachineCode
-            "is_online": row[2] == 1
+            "name": f"Vending Machine {row[1]}",  # using vendingMachineCode for name
+            "is_online": row[2]  # state: 1 = online, 0 = offline
         } for row in vm_rows
     ]
 
-    # Machine selection: GET or POST or fallback to first available
-    machine_id = request.form.get('machine') or request.args.get('machine')
-    try:
-        machine_id = int(machine_id) if machine_id else vm_rows[0][0]
-    except ValueError:
-        machine_id = vm_rows[0][0]
-
-    # Find selected machine status
+    # Find status of selected machine
     selected_machine_status = next((m["is_online"] for m in machines if m["id"] == machine_id), 0)
 
-    # Custom table names
-    sales_table = f"sales{company_id}"
+    # Sales and product tables (custom per company)
+    sales_table = f"selles{company_id}"
     products_table = f"products{company_id}"
 
-    # Optional date filter
-    start_date = request.args.get('start')
-    end_date = request.args.get('end')
+    cur.execute(f"SELECT productCode, productName, salePrice, saleTime FROM {sales_table} WHERE vendingMachineId = %s", (machine_id,))
+    sales = cur.fetchall()
 
-    # Fetch sales
-    sales = []
-    try:
-        if start_date and end_date:
-            cur.execute(f"""
-                SELECT productCode, productName, salePrice, saleTime
-                FROM {sales_table}
-                WHERE vendingMachineId = %s AND saleTime BETWEEN %s AND %s
-                ORDER BY saleTime DESC
-            """, (machine_id, start_date, end_date))
-        else:
-            cur.execute(f"""
-                SELECT productCode, productName, salePrice, saleTime
-                FROM {sales_table}
-                WHERE vendingMachineId = %s
-                ORDER BY saleTime DESC
-            """, (machine_id,))
-        sales = cur.fetchall()
-    except Exception as e:
-        flash(f"Error fetching sales: {e}", "danger")
-
-    # Fetch total sales amount
-    try:
-        if start_date and end_date:
-            cur.execute(f"""
-                SELECT SUM(salePrice)
-                FROM {sales_table}
-                WHERE vendingMachineId = %s AND saleTime BETWEEN %s AND %s
-            """, (machine_id, start_date, end_date))
-        else:
-            cur.execute(f"""
-                SELECT SUM(salePrice)
-                FROM {sales_table}
-                WHERE vendingMachineId = %s
-            """, (machine_id,))
-        total_sales = cur.fetchone()[0] or 0
-    except Exception as e:
-        total_sales = 0
-        flash(f"Could not compute total sales: {e}", "warning")
-
-    # Fetch products
-    products = []
-    try:
-        cur.execute(f"""
-            SELECT productCode, productName, productPrice
-            FROM {products_table}
-            WHERE vendingMachineId = %s
-        """, (machine_id,))
-        products = cur.fetchall()
-    except Exception as e:
-        flash(f"Error fetching products: {e}", "danger")
+    cur.execute(f"SELECT productCode, productName, productPrice FROM {products_table} WHERE vendingMachineId = %s", (machine_id,))
+    products = cur.fetchall()
 
     cur.close()
 
     return render_template(
         'company_dashboard.html',
         company_name=company_name,
-        machines=machines,
-        selected_machine=machine_id,
-        selected_machine_status=selected_machine_status,
         sales=sales,
         products=products,
-        total_sales=total_sales,
-        start_date=start_date,
-        end_date=end_date
+        selected_machine=machine_id,
+        machines=machines,
+        selected_machine_status=selected_machine_status
     )
+    
 # Update Prices
 @app.route('/update_prices', methods=['POST'])
 def update_prices():
