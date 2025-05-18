@@ -25,6 +25,17 @@
         .rfid-card {
             margin-bottom: 15px;
         }
+        .scrollable-table-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        /* Optional: fix the table header while scrolling */
+        .scrollable-table-container thead th {
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -38,7 +49,7 @@
         <div id="rfid-container">
             {% for card in rfid_cards %}
                 <div class="rfid-card p-3 bg-light rounded">
-                    <strong>Card UID: </strong>{{ card.uid }}<br>
+                    <strong>Card UID:</strong> {{ card.uid }}<br>
                     <strong>Balance:</strong> {{ card.balance }} Dinars
                 </div>
             {% endfor %}
@@ -48,22 +59,24 @@
     <!-- Purchase History -->
     <div class="card p-3">
         <h4 class="card-title mb-3">Purchase History</h4>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Price (Dinars)</th>
-                </tr>
-            </thead>
-            <tbody id="purchase-history">
-                {% for purchase in purchases %}
+        <div class="scrollable-table-container">
+            <table class="table table-hover">
+                <thead>
                     <tr>
-                        <td>{{ purchase[0].strftime('%Y-%m-%d %H:%M:%S') }}</td>  <!-- If using tuple -->
-                        <td>{{ purchase[1] }}</td>
+                        <th>Date</th>
+                        <th>Price (Dinars)</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="purchase-history">
+                    {% for purchase in purchases %}
+                        <tr>
+                            <td>{{ purchase[0].strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td>{{ purchase[1] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
