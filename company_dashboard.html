@@ -125,7 +125,7 @@
     </div>
   </div>
 
-  <!-- Product Name & Price Update Section (SINGLE TABLE, TWO BUTTONS) -->
+  <!-- Product Name & Price Update Section (SINGLE TABLE, EDITABLE CELLS) -->
   {% if selected_machine != 'all' %}
   <div class="card mt-4">
     <div class="card-body">
@@ -138,20 +138,16 @@
               <tr>
                 <th>Product Name</th>
                 <th>Product Code</th>
-                <th>New Name</th>
-                <th>Current Price (Dinars)</th>
-                <th>New Price (Dinars)</th>
+                <th>Price (Dinars)</th>
               </tr>
             </thead>
             <tbody>
               {% for product in products %}
               <tr>
-                <td>{{ product[1] }}</td>
-                <td>{{ product[0] }}</td>
                 <td>
                   <input type="text" class="form-control" name="name_{{ product[0] }}" value="{{ product[1] }}">
                 </td>
-                <td>{{ product[2] }} Dinars</td>
+                <td>{{ product[0] }}</td>
                 <td>
                   <input type="number" class="form-control" name="price_{{ product[0] }}" value="{{ product[2] }}">
                 </td>
