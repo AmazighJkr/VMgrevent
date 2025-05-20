@@ -146,7 +146,9 @@
             <tbody>
               {% for product in products %}
               <tr>
-                <td>{{ product[1] }}</td>
+                <td>
+                  <input type="text" class="form-control" name="name_{{ product[0] }}" value="{{ product[1] }}">
+                </td>
                 <td>{{ product[0] }}</td>
                 <td>{{ product[2] }} Dinars</td>
                 <td>
