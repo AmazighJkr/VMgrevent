@@ -285,15 +285,13 @@ def client_dashboard():
     client_id = session['user']['clientId']
     cur = mysql.connection.cursor()
 
-    # Fetch purchases with product name
+    # Fetch purchases with product name directly from the purchases table
     table_name = f"purchases{client_id}"
-    # Adjust the join and column names as needed for your schema
     cur.execute(f"""
-        SELECT p.date, p.price, prod.name
-        FROM {table_name} p
-        JOIN products prod ON p.product_code = prod.code
-        WHERE p.clientId = %s
-        ORDER BY p.date DESC
+        SELECT date, price, productName
+        FROM {table_name}
+        WHERE clientId = %s
+        ORDER BY date DESC
     """, (client_id,))
     purchases = cur.fetchall()
 
