@@ -408,14 +408,9 @@ def update_prices():
         if key.startswith("price_"):
             product_code = key.split("_", 1)[1]
             new_price = value
-            # Get the new name for this product, if present
-            new_name = request.form.get(f"name_{product_code}")
-            if new_name is not None:
-                query = f"UPDATE {table_name} SET productPrice = %s, productName = %s WHERE productCode = %s AND vendingMachineId = %s"
-                cur.execute(query, (new_price, new_name, product_code, machine_id))
-            else:
-                query = f"UPDATE {table_name} SET productPrice = %s WHERE productCode = %s AND vendingMachineId = %s"
-                cur.execute(query, (new_price, product_code, machine_id))
+            # Only update the price, not the name
+            query = f"UPDATE {table_name} SET productPrice = %s WHERE productCode = %s AND vendingMachineId = %s"
+            cur.execute(query, (new_price, product_code, machine_id))
 
     mysql.connection.commit()
 
@@ -448,6 +443,28 @@ def update_prices():
         print(f"No machine found with ID {machine_id}")
 
     return redirect(url_for('company_dashboard'))  # Refresh page
+
+# Update Product Names (NEW ROUTE)
+@app.route('/update_product_names', methods=['POST'])
+def update_product_names():
+    if 'user' not in session or session['user']['role'] != 'company':
+        return redirect(url_for('login'))
+
+    company_id = session['user']['companyId']
+    machine_id = request.form.get('machine', '1')
+    table_name = f"products{company_id}"
+
+    cur = mysql.connection.cursor()
+    for key, value in request.form.items():
+        if key.startswith("name_"):
+            product_code = key.split("_", 1)[1]
+            new_name = value
+            query = f"UPDATE {table_name} SET productName = %s WHERE productCode = %s AND vendingMachineId = %s"
+            cur.execute(query, (new_name, product_code, machine_id))
+    mysql.connection.commit()
+    cur.close()
+
+    return redirect(url_for('company_dashboard', machine=machine_id))
 
 # Run the Flask app
 if __name__ == "__main__":
