@@ -405,12 +405,17 @@ def update_prices():
 
     cur = mysql.connection.cursor()
     for key, value in request.form.items():
-        if key.startswith("price_"):  # Filter only price fields
-            product_code = key.split("_")[1]
+        if key.startswith("price_"):
+            product_code = key.split("_", 1)[1]
             new_price = value
-
-            query = f"UPDATE {table_name} SET productPrice = %s WHERE productCode = %s AND vendingMachineId = %s"
-            cur.execute(query, (new_price, product_code, machine_id))
+            # Get the new name for this product, if present
+            new_name = request.form.get(f"name_{product_code}")
+            if new_name is not None:
+                query = f"UPDATE {table_name} SET productPrice = %s, productName = %s WHERE productCode = %s AND vendingMachineId = %s"
+                cur.execute(query, (new_price, new_name, product_code, machine_id))
+            else:
+                query = f"UPDATE {table_name} SET productPrice = %s WHERE productCode = %s AND vendingMachineId = %s"
+                cur.execute(query, (new_price, product_code, machine_id))
 
     mysql.connection.commit()
 
