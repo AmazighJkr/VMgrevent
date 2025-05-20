@@ -96,34 +96,54 @@
     </div>
   </div>
 
-  <!-- Sales Table -->
+<!-- Sales Table -->
   <div class="card mt-4">
     <div class="card-body">
       <h5 class="card-title mb-3"><i class="bi bi-bar-chart-line me-2"></i>Sales History</h5>
       <div class="table-responsive scrollable-table">
         <table class="table table-striped table-hover">
-          <thead class="table-light">
-            <tr>
-              <th>Product Name</th>
-              <th>Product Code</th>
-              <th>Sale Price (Dinars)</th>
-              <th>Sale Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for sale in sales %}
-            <tr>
-              <td>{{ sale[1] }}</td>
-              <td>{{ sale[0] }}</td>
-              <td>{{ sale[2] }} Dinars</td>
-              <td>{{ sale[3] }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
+          <!-- ... existing code ... -->
         </table>
       </div>
     </div>
   </div>
+
+  <!-- Product Name Update Section -->
+  {% if selected_machine != 'all' %}
+  <div class="card mt-4">
+    <div class="card-body">
+      <h5 class="card-title mb-3"><i class="bi bi-pencil-square me-2"></i>Edit Product Names</h5>
+      <form method="POST" action="{{ url_for('update_product_names') }}">
+        <input type="hidden" name="machine" value="{{ selected_machine }}">
+        <div class="table-responsive scrollable-table">
+          <table class="table table-bordered table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Product Code</th>
+                <th>Current Name</th>
+                <th>New Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in products %}
+              <tr>
+                <td>{{ product[0] }}</td>
+                <td>{{ product[1] }}</td>
+                <td>
+                  <input type="text" class="form-control" name="name_{{ product[0] }}" value="{{ product[1] }}">
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <button class="btn btn-secondary w-100 mt-3" type="submit">
+          <i class="bi bi-save me-2"></i>Update Names
+        </button>
+      </form>
+    </div>
+  </div>
+  {% endif %}
 
   <!-- Price Update Section -->
   {% if selected_machine != 'all' %}
@@ -132,7 +152,6 @@
       <h5 class="card-title mb-3"><i class="bi bi-tag me-2"></i>Update Product Prices</h5>
       <form method="POST" action="{{ url_for('update_prices') }}">
         <input type="hidden" name="machine" value="{{ selected_machine }}">
-
         <div class="table-responsive scrollable-table">
           <table class="table table-bordered table-hover">
             <thead class="table-light">
@@ -146,9 +165,7 @@
             <tbody>
               {% for product in products %}
               <tr>
-                <td>
-                  <input type="text" class="form-control" name="name_{{ product[0] }}" value="{{ product[1] }}">
-                </td>
+                <td>{{ product[1] }}</td>
                 <td>{{ product[0] }}</td>
                 <td>{{ product[2] }} Dinars</td>
                 <td>
@@ -159,7 +176,6 @@
             </tbody>
           </table>
         </div>
-
         <button class="btn btn-primary w-100 mt-3" type="submit" {% if not selected_machine_status %}disabled{% endif %}>
           <i class="bi bi-check-circle-fill me-2"></i>Update Prices
         </button>
