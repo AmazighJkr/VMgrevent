@@ -182,8 +182,8 @@ def handle_sell_product(data):
 
         purchase_table = validate_table_name(f"purchases{client_Id}")
         cursor.execute(
-            f"INSERT INTO {purchase_table} (clientId, price, date) VALUES (%s, %s, NOW())",
-            (user_id, product_price)
+            f"INSERT INTO {purchase_table} (clientId, productName, price, date) VALUES (%s, %s, %s, NOW())",
+            (user_id,product_name, product_price)
         )
 
         mysql.connection.commit()
