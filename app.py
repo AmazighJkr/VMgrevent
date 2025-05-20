@@ -285,18 +285,24 @@ def client_dashboard():
     client_id = session['user']['clientId']
     cur = mysql.connection.cursor()
 
-    # ✅ Fetch purchases from the correct table
+    # Fetch purchases with product name
     table_name = f"purchases{client_id}"
-    cur.execute(f"SELECT date, price FROM {table_name} WHERE clientId = %s", (client_id,))
+    # Adjust the join and column names as needed for your schema
+    cur.execute(f"""
+        SELECT p.date, p.price, prod.name
+        FROM {table_name} p
+        JOIN products prod ON p.product_code = prod.code
+        WHERE p.clientId = %s
+        ORDER BY p.date DESC
+    """, (client_id,))
     purchases = cur.fetchall()
 
-    # ✅ Fetch RFID cards
+    # Fetch RFID cards
     cur.execute("SELECT uid, balance FROM users WHERE clientId = %s", (client_id,))
     rfid_cards = [{'uid': row[0], 'balance': row[1]} for row in cur.fetchall()]
     
     cur.close()
 
-    # ✅ Pass the data to the template instead of returning JSON
     return render_template('client_dashboard.html', purchases=purchases, rfid_cards=rfid_cards)
 
 # Serve Company Dashboard
