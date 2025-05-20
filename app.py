@@ -313,12 +313,9 @@ def company_dashboard():
     company_name = company_data[0]
     vending_machine_num = company_data[1]
 
-    # Get selected machine ID from form (POST) or query param (GET)
-    machine_id = request.form.get('machine') or request.args.get('machine') or '1'
-    try:
-        machine_id = int(machine_id)
-    except ValueError:
-        machine_id = 1
+    # Get selected machine and time range from form or query params
+    machine_id = request.form.get('machine') or request.args.get('machine') or 'all'
+    time_range = request.form.get('time_range') or request.args.get('time_range') or 'daily'
 
     # Get all vending machines for this company and their online status
     cur.execute("SELECT vendingMachineId, vendingMachineCode, state FROM vendingmachines WHERE companyId = %s", (company_id,))
@@ -326,23 +323,60 @@ def company_dashboard():
     machines = [
         {
             "id": row[0],
-            "name": f"Vending Machine {row[1]}",  # using vendingMachineCode for name
-            "is_online": row[2]  # state: 1 = online, 0 = offline
+            "name": f"Vending Machine {row[1]}",
+            "is_online": row[2]
         } for row in vm_rows
     ]
 
-    # Find status of selected machine
-    selected_machine_status = next((m["is_online"] for m in machines if m["id"] == machine_id), 0)
+    # Determine selected_machine_status
+    if machine_id == 'all':
+        selected_machine_status = None  # Not shown for "all"
+    else:
+        try:
+            machine_id_int = int(machine_id)
+        except ValueError:
+            machine_id_int = machines[0]["id"] if machines else 1
+        selected_machine_status = next((m["is_online"] for m in machines if m["id"] == machine_id_int), 0)
 
     # Sales and product tables (custom per company)
     sales_table = f"selles{company_id}"
     products_table = f"products{company_id}"
 
-    cur.execute(f"SELECT productCode, productName, salePrice, saleTime FROM {sales_table} WHERE vendingMachineId = %s", (machine_id,))
+    # Time range filter
+    from datetime import datetime, timedelta
+    now = datetime.now()
+    if time_range == 'daily':
+        start_time = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    elif time_range == 'weekly':
+        start_time = now - timedelta(days=now.weekday())
+        start_time = start_time.replace(hour=0, minute=0, second=0, microsecond=0)
+    elif time_range == 'monthly':
+        start_time = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    elif time_range == 'yearly':
+        start_time = now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+    else:
+        start_time = now.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    # Build sales query
+    sales_params = []
+    sales_query = f"SELECT productCode, productName, salePrice, saleTime FROM {sales_table} WHERE saleTime >= %s"
+    sales_params.append(start_time)
+    if machine_id != 'all':
+        sales_query += " AND vendingMachineId = %s"
+        sales_params.append(int(machine_id))
+    sales_query += " ORDER BY saleTime DESC"
+    cur.execute(sales_query, tuple(sales_params))
     sales = cur.fetchall()
 
-    cur.execute(f"SELECT productCode, productName, productPrice FROM {products_table} WHERE vendingMachineId = %s", (machine_id,))
-    products = cur.fetchall()
+    # Calculate income_total
+    income_total = sum(sale[2] for sale in sales)
+
+    # Build products query
+    if machine_id != 'all':
+        cur.execute(f"SELECT productCode, productName, productPrice FROM {products_table} WHERE vendingMachineId = %s", (int(machine_id),))
+        products = cur.fetchall()
+    else:
+        products = []
 
     cur.close()
 
@@ -353,7 +387,9 @@ def company_dashboard():
         products=products,
         selected_machine=machine_id,
         machines=machines,
-        selected_machine_status=selected_machine_status
+        selected_machine_status=selected_machine_status,
+        time_range=time_range,
+        income_total=income_total
     )
     
 # Update Prices
