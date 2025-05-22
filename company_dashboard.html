@@ -138,6 +138,7 @@
               <tr>
                 <th>Product Name</th>
                 <th>Product Code</th>
+                <th>In Stock</th> <!-- New column -->
                 <th>Price (Dinars)</th>
               </tr>
             </thead>
@@ -148,6 +149,7 @@
                   <input type="text" class="form-control" name="name_{{ product[0] }}" value="{{ product[1] }}">
                 </td>
                 <td>{{ product[0] }}</td>
+                <td>{{ product[3] }}</td> <!-- Display stock here -->
                 <td>
                   <input type="number" class="form-control" name="price_{{ product[0] }}" value="{{ product[2] }}">
                 </td>
