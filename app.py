@@ -387,7 +387,11 @@ def company_dashboard():
 
     # Build products query
     if machine_id != 'all':
-        cur.execute(f"SELECT productCode, productName, productPrice FROM {products_table} WHERE vendingMachineId = %s", (int(machine_id),))
+        # Fetch productCode, productName, productPrice, and productStock
+        cur.execute(
+            f"SELECT productCode, productName, productPrice, productStock FROM {products_table} WHERE vendingMachineId = %s",
+            (int(machine_id),)
+        )
         products = cur.fetchall()
     else:
         products = []
