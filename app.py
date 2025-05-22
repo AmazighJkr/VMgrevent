@@ -277,14 +277,23 @@ def login():
 
     return jsonify({'error': 'Invalid username or password'}), 401
 
-# Serve Client Dashboard
-@app.route('/client_dashboard', methods=['GET'])
+@app.route('/client_dashboard', methods=['GET', 'POST'])
 def client_dashboard():
     if 'user' not in session or session['user']['role'] != 'client':
         return redirect(url_for('login'))
 
     client_id = session['user']['clientId']
     cur = mysql.connection.cursor()
+
+    # Handle POST: Toggle card status
+    if request.method == 'POST':
+        uid = request.form['uid']
+        activate = int(request.form['activate'])  # 1 for activate, 0 for deactivate
+        cur.execute(
+            "UPDATE users SET active = %s WHERE uid = %s AND clientId = %s",
+            (activate, uid, client_id)
+        )
+        mysql.connection.commit()
 
     # Fetch purchases with product name directly from the purchases table
     table_name = f"purchases{client_id}"
@@ -296,9 +305,9 @@ def client_dashboard():
     """, (client_id,))
     purchases = cur.fetchall()
 
-    # Fetch RFID cards
-    cur.execute("SELECT uid, balance FROM users WHERE clientId = %s", (client_id,))
-    rfid_cards = [{'uid': row[0], 'balance': row[1]} for row in cur.fetchall()]
+    # Fetch RFID cards, including active status
+    cur.execute("SELECT uid, balance, active FROM users WHERE clientId = %s", (client_id,))
+    rfid_cards = [{'uid': row[0], 'balance': row[1], 'active': row[2]} for row in cur.fetchall()]
     
     cur.close()
 
