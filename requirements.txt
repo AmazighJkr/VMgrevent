@@ -12,3 +12,4 @@ requests==2.31.0
 websocket-client==1.6.1
 flask-bcrypt==1.0.1
 Flask-Session==0.8.0
+passlib>=1.7.4
