@@ -78,7 +78,7 @@
               {{ 'Active' if card.active else 'Inactive' }}
             </span>
           </div>
-          <form method="post" action="{{ url_for('toggle_card_status') }}">
+          <form method="post" action="{{ url_for('client_dashboard') }}">
             <input type="hidden" name="uid" value="{{ card.uid }}">
             <input type="hidden" name="activate" value="{{ '0' if card.active else '1' }}">
             <button type="submit" class="btn btn-{{ 'danger' if card.active else 'success' }}">
