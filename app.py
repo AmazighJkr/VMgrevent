@@ -154,12 +154,21 @@ def handle_sell_product(data):
         vending_machine_id, company_id = vending_machine
 
         products_table = f"products{company_id}"
-        cursor.execute(f"SELECT productPrice, productName FROM {products_table} WHERE vendingMachineId = %s AND productCode = %s", (vending_machine_id, product_code))
+        # Fetch productPrice, productName, and productStock
+        cursor.execute(
+            f"SELECT productPrice, productName, productStock FROM {products_table} WHERE vendingMachineId = %s AND productCode = %s",
+            (vending_machine_id, product_code)
+        )
         product = cursor.fetchone()
         if not product:
             socketio.send(json.dumps({"sell_response": "Product not found in vending machine"}))
             return
-        product_price, product_name = product
+        product_price, product_name, product_stock = product
+
+        # Check if product is in stock
+        if product_stock is None or product_stock <= 0:
+            socketio.send(json.dumps({"sell_response": "Product out of stock"}))
+            return
 
         cursor.execute("SELECT userId, clientId, balance FROM users WHERE uid = %s AND password = %s", (uid, password))
         user = cursor.fetchone()
@@ -185,6 +194,12 @@ def handle_sell_product(data):
         cursor.execute(
             f"INSERT INTO {purchase_table} (clientId, userId, productName, price, date) VALUES (%s, %s, %s, %s, NOW())",
             (client_Id, user_id, product_name, product_price)
+        )
+
+        # Decrement product stock by 1
+        cursor.execute(
+            f"UPDATE {products_table} SET productStock = productStock - 1 WHERE vendingMachineId = %s AND productCode = %s",
+            (vending_machine_id, product_code)
         )
 
         mysql.connection.commit()
