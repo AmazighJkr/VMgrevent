@@ -9,6 +9,7 @@ import os
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
+from passlib.hash import scrypt
 
 connected_vms = {}
 sid_to_code = {}
@@ -243,8 +244,8 @@ def handle_custom_command(data):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return render_template('login.html')  # Ensure 'login.html' exists
-    
+        return render_template('login.html')
+
     data = request.json
     username = data.get('username')
     password = data.get('password')
@@ -260,8 +261,8 @@ def login():
 
     if company:
         db_password = company[1]
-        if db_password == password:  # Compare directly (NO HASHING)
-            session['user'] = {'companyId': company[0], 'role': 'company'}  
+        if scrypt.verify(password, db_password):
+            session['user'] = {'companyId': company[0], 'role': 'company'}
             return jsonify({'redirect': '/company_dashboard'})
 
     # Check if user is a client
@@ -270,8 +271,8 @@ def login():
 
     if client:
         db_password = client[1]
-        if db_password == password:  # Compare directly (NO HASHING)
-            session['user'] = {'clientId': client[0], 'role': 'client'} 
+        if scrypt.verify(password, db_password):
+            session['user'] = {'clientId': client[0], 'role': 'client'}
             return jsonify({'redirect': '/client_dashboard'})
 
     return jsonify({'error': 'Invalid username or password'}), 401
