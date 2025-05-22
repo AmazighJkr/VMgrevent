@@ -183,7 +183,7 @@ def handle_sell_product(data):
 
         purchase_table = validate_table_name(f"purchases{client_Id}")
         cursor.execute(
-            f"INSERT INTO {purchase_table} (clientId, userId, productName, price, date) VALUES (%s, %s, %s, NOW())",
+            f"INSERT INTO {purchase_table} (clientId, userId, productName, price, date) VALUES (%s, %s, %s, %s, NOW())",
             (client_Id, user_id, product_name, product_price)
         )
 
