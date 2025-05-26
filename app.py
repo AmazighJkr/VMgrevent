@@ -146,7 +146,12 @@ def handle_sell_product(data):
     cursor = None
     try:
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT vendingMachineId, companyId FROM vendingmachines WHERE vendingMachineCode = %s", (vending_machine_code,))
+
+        # 1. Find vending machine and company
+        cursor.execute(
+            "SELECT vendingMachineId, companyId FROM vendingmachines WHERE vendingMachineCode = %s",
+            (vending_machine_code,)
+        )
         vending_machine = cursor.fetchone()
         if not vending_machine:
             socketio.send(json.dumps({"sell_response": "Invalid vending machine code"}))
@@ -154,7 +159,8 @@ def handle_sell_product(data):
         vending_machine_id, company_id = vending_machine
 
         products_table = f"products{company_id}"
-        # Fetch productPrice, productName, and productStock
+
+        # 2. Get product details
         cursor.execute(
             f"SELECT productPrice, productName, productStock FROM {products_table} WHERE vendingMachineId = %s AND productCode = %s",
             (vending_machine_id, product_code)
@@ -165,38 +171,47 @@ def handle_sell_product(data):
             return
         product_price, product_name, product_stock = product
 
-        # Check if product is in stock
         if product_stock is None or product_stock <= 0:
             socketio.send(json.dumps({"sell_response": "Product out of stock"}))
             return
 
-        cursor.execute("SELECT userId, clientId, balance FROM users WHERE uid = %s AND password = %s", (uid, password))
+        # 3. Get user and balance
+        cursor.execute(
+            "SELECT userId, clientId, balance FROM users WHERE uid = %s AND password = %s",
+            (uid, password)
+        )
         user = cursor.fetchone()
         if not user:
             socketio.send(json.dumps({"sell_response": "Invalid user credentials"}))
             return
-        user_id, client_Id, balance = user
+        user_id, client_id, balance = user
 
         if balance < product_price:
             socketio.send(json.dumps({"sell_response": f"Insufficient balance, {balance}"}))
             return
 
         new_balance = balance - product_price
-        cursor.execute("UPDATE users SET balance = %s WHERE userId = %s", (new_balance, user_id))
 
-        sale_table = validate_table_name(f"selles{vending_machine_id}")
+        # 4. Deduct balance
+        cursor.execute(
+            "UPDATE users SET balance = %s WHERE userId = %s", 
+            (new_balance, user_id)
+        )
+
+        # 5. Log to sales table (per-vending-machine)
+        sale_table = f"selles{vending_machine_id}"
         cursor.execute(
             f"INSERT INTO {sale_table} (vendingMachineId, productCode, productName, SalePrice, saleTime) VALUES (%s, %s, %s, %s, NOW())",
             (vending_machine_id, product_code, product_name, product_price)
         )
 
-        purchase_table = validate_table_name(f"purchases{client_Id}")
+        # 6. INSERT to shared purchases table
         cursor.execute(
-            f"INSERT INTO {purchase_table} (clientId, userId, productName, price, date) VALUES (%s, %s, %s, %s, NOW())",
-            (client_Id, user_id, product_name, product_price)
+            "INSERT INTO purchases (clientId, userId, productName, price, date) VALUES (%s, %s, %s, %s, NOW())",
+            (client_id, user_id, product_name, product_price)
         )
 
-        # Decrement product stock by 1
+        # 7. Reduce product stock by 1
         cursor.execute(
             f"UPDATE {products_table} SET productStock = productStock - 1 WHERE vendingMachineId = %s AND productCode = %s",
             (vending_machine_id, product_code)
@@ -211,7 +226,6 @@ def handle_sell_product(data):
     finally:
         if cursor:
             cursor.close()
-
 # Update price functionality
 def handle_update_price(data):
     vending_machine_code = data.get("vendingMachineCode")
@@ -310,11 +324,10 @@ def client_dashboard():
         )
         mysql.connection.commit()
 
-    # Fetch purchases with product name directly from the purchases table
-    table_name = f"purchases{client_id}"
-    cur.execute(f"""
+    # Fetch purchases from the single shared table
+    cur.execute("""
         SELECT date, price, productName
-        FROM {table_name}
+        FROM purchases
         WHERE clientId = %s
         ORDER BY date DESC
     """, (client_id,))
