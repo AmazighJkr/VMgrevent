@@ -186,10 +186,11 @@ def handle_sell_product(data):
             return
         
         user_id, client_id, balance, active, real_password = user
-        
-        if password != real_password:
+
+        if not check_password_hash(real_password, password):
             socketio.send(json.dumps({"sell_response": "Incorrect password"}))
             return
+
         
         if active == 0:
             socketio.send(json.dumps({"sell_response": "Card is deactivated"}))
