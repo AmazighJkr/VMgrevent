@@ -174,16 +174,27 @@ def handle_sell_product(data):
             return
 
         # 3. Get user and balance
+       # Find user by UID first
         cursor.execute(
-            "SELECT userId, clientId, balance FROM users WHERE uid = %s AND password = %s",
-            (uid, password)
+            "SELECT userId, clientId, balance, active, password FROM users WHERE uid = %s",
+            (uid,)
         )
         user = cursor.fetchone()
+        
         if not user:
-            socketio.send(json.dumps({"sell_response": "Invalid user credentials"}))
+            socketio.send(json.dumps({"sell_response": "Invalid user UID"}))
             return
-        user_id, client_id, balance = user
-
+        
+        user_id, client_id, balance, active, real_password = user
+        
+        if password != real_password:
+            socketio.send(json.dumps({"sell_response": "Incorrect password"}))
+            return
+        
+        if active == 0:
+            socketio.send(json.dumps({"sell_response": "Card is deactivated"}))
+            return
+        
         if balance < product_price:
             socketio.send(json.dumps({"sell_response": f"Insufficient balance, {balance}"}))
             return
@@ -224,6 +235,7 @@ def handle_sell_product(data):
     finally:
         if cursor:
             cursor.close()
+            
 # Update price functionality
 def handle_update_price(data):
     vending_machine_code = data.get("vendingMachineCode")
