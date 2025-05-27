@@ -314,7 +314,7 @@ def client_dashboard():
     client_id = session['user']['clientId']
     cur = mysql.connection.cursor()
 
-    # Handle POST: Toggle card status
+    # POST: Toggle card status
     if request.method == 'POST':
         uid = request.form['uid']
         activate = int(request.form['activate'])  # 1 for activate, 0 for deactivate
@@ -324,20 +324,45 @@ def client_dashboard():
         )
         mysql.connection.commit()
 
-    # Fetch purchases from the single shared table
-    cur.execute("""
-        SELECT date, price, productName
-        FROM purchases
-        WHERE clientId = %s
-        ORDER BY date DESC
-    """, (client_id,))
-    purchases = cur.fetchall()
+    # 1. Fetch RFID cards - order by userId!
+    cur.execute("SELECT userId, uid, balance, active FROM users WHERE clientId = %s ORDER BY userId ASC", (client_id,))
+    rfid_rows = cur.fetchall()
+    # Note: the order is now by userId
+    rfid_cards = [
+        {'userId': row[0], 'uid': row[1], 'balance': row[2], 'active': row[3]}
+        for row in rfid_rows
+    ]
+    # Map UID -> card_number (1-based index in this list)
+    uid_to_card_num = {card['uid']: idx+1 for idx, card in enumerate(rfid_cards)}
 
-    # Fetch RFID cards, including active status
-    cur.execute("SELECT uid, balance, active FROM users WHERE clientId = %s", (client_id,))
-    rfid_cards = [{'uid': row[0], 'balance': row[1], 'active': row[2]} for row in cur.fetchall()]
-    
+    # 2. Fetch purchases - now also fetch userId and uid for lookup
+    cur.execute("""
+        SELECT p.date, p.price, p.productName, p.userId, u.uid
+        FROM purchases p
+        JOIN users u ON u.userId = p.userId
+        WHERE p.clientId = %s
+        ORDER BY p.date DESC
+    """, (client_id,))
+    purchase_rows = cur.fetchall()
+
+    # 3. Prepare purchases for the template
+    purchases = []
+    for row in purchase_rows:
+        date, price, productName, userId, uid = row
+        card_number = uid_to_card_num.get(uid, '?')  # fallback ? for deleted card
+        purchases.append({
+            'date': date,
+            'price': price,
+            'productName': productName,
+            'uid': uid,
+            'card_number': card_number
+        })
+
     cur.close()
+
+    # Remove userId from rfid_cards if your template doesn't need it:
+    for card in rfid_cards:
+        del card['userId']
 
     return render_template('client_dashboard.html', purchases=purchases, rfid_cards=rfid_cards)
 
