@@ -134,8 +134,6 @@ def handle_message(data):
         print(f"WebSocket error: {e}")
         socketio.send(json.dumps({"error": str(e)}))
 
-
-
 # Sell product functionality
 def handle_sell_product(data):
     vending_machine_code = data.get("vendingMachineCode")
