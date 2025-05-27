@@ -10,41 +10,34 @@
     body {
       background-color: #f8f9fa;
     }
-
     .dashboard-container {
       padding-top: 80px;
       padding-bottom: 60px;
       max-width: 900px;
       margin: 0 auto;
     }
-
     .card {
       box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
     }
-
     .scrollable-table {
       max-height: 300px;
       overflow-y: auto;
     }
-
     .scrollable-table thead th {
       position: sticky;
       top: 0;
       background-color: #f8f9fa;
       z-index: 10;
     }
-
     footer {
       background-color: #343a40;
       color: #fff;
       padding: 30px 0;
     }
-
     footer a {
       color: #adb5bd;
       text-decoration: none;
     }
-
     footer a:hover {
       color: #fff;
     }
@@ -65,30 +58,47 @@
 <!-- Main Content -->
 <div class="container dashboard-container">
   <h2 class="text-center mb-3">Your RFID Cards</h2>
-  
+
   <div class="card mb-4 p-3">
     <div id="rfid-container">
-      {% for card in rfid_cards %}
-        <div class="mb-3 p-3 bg-light rounded d-flex justify-content-between align-items-center">
-          <div>
-            <strong>Card UID:</strong> {{ card.uid }}<br />
-            <strong>Balance:</strong> {{ card.balance }} Dinars<br />
-            <strong>Status:</strong>
-            <span class="fw-bold {{ 'text-success' if card.active else 'text-danger' }}">
-              {{ 'Active' if card.active else 'Inactive' }}
-            </span>
-          </div>
-          <form method="post" action="{{ url_for('client_dashboard') }}">
-            <input type="hidden" name="uid" value="{{ card.uid }}">
-            <input type="hidden" name="activate" value="{{ '0' if card.active else '1' }}">
-            <button type="submit" class="btn btn-{{ 'danger' if card.active else 'success' }}">
-              {{ 'Deactivate' if card.active else 'Activate' }}
-            </button>
-          </form>
-        </div>
-      {% else %}
-        <p class="text-muted text-center">No RFID cards found.</p>
-      {% endfor %}
+      <table class="table table-borderless align-middle mb-0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Card UID</th>
+            <th>Balance</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for card in rfid_cards %}
+            <tr>
+              <td>Card {{ loop.index }}</td>
+              <td>{{ card.uid }}</td>
+              <td>{{ card.balance }} Dinars</td>
+              <td>
+                <span class="fw-bold {{ 'text-success' if card.active else 'text-danger' }}">
+                  {{ 'Active' if card.active else 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <form method="post" action="{{ url_for('client_dashboard') }}">
+                  <input type="hidden" name="uid" value="{{ card.uid }}">
+                  <input type="hidden" name="activate" value="{{ '0' if card.active else '1' }}">
+                  <button type="submit" class="btn btn-{{ 'danger' if card.active else 'success' }}">
+                    {{ 'Deactivate' if card.active else 'Activate' }}
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="5" class="text-center text-muted">No RFID cards found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -101,18 +111,25 @@
             <th>Date</th>
             <th>Product Name</th>
             <th>Price (Dinars)</th>
+            <th>Card</th>
           </tr>
         </thead>
         <tbody>
           {% for purchase in purchases %}
             <tr>
-              <td>{{ purchase[0].strftime('%Y-%m-%d %H:%M:%S') }}</td>
-              <td>{{ purchase[2] }}</td>
-              <td>{{ purchase[1] }}</td>
+              <td>
+                {{ purchase['date'].strftime('%Y-%m-%d %H:%M:%S') if purchase['date'] else '' }}
+              </td>
+              <td>{{ purchase['productName'] }}</td>
+              <td>{{ purchase['price'] }}</td>
+              <td>
+                Card {{ purchase['card_number'] }}
+                <small class="text-muted d-block">{{ purchase['uid'] }}</small>
+              </td>
             </tr>
           {% else %}
             <tr>
-              <td colspan="3" class="text-center text-muted">No purchases found.</td>
+              <td colspan="4" class="text-center text-muted">No purchases found.</td>
             </tr>
           {% endfor %}
         </tbody>
