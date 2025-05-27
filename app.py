@@ -306,6 +306,11 @@ def login():
 
     return jsonify({'error': 'Invalid username or password'}), 401
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
 @app.route('/client_dashboard', methods=['GET', 'POST'])
 def client_dashboard():
     if 'user' not in session or session['user']['role'] != 'client':
