@@ -125,12 +125,12 @@
     </div>
   </div>
 
-  <!-- Product Name & Price Update Section (SINGLE TABLE, EDITABLE CELLS) -->
+  <!-- Editable Table Section with TWO BUTTONS -->
   {% if selected_machine != 'all' %}
   <div class="card mt-4">
     <div class="card-body">
-      <h5 class="card-title mb-3"><i class="bi bi-pencil-square me-2"></i>Edit Product Names & Prices</h5>
-      <form method="POST" class="d-inline">
+      <h5 class="card-title mb-3"><i class="bi bi-pencil-square me-2"></i>Edit Product Name, Stock & Price</h5>
+      <form method="POST">
         <input type="hidden" name="machine" value="{{ selected_machine }}">
         <div class="table-responsive scrollable-table">
           <table class="table table-bordered table-hover">
@@ -138,7 +138,7 @@
               <tr>
                 <th>Product Name</th>
                 <th>Product Code</th>
-                <th>In Stock</th> <!-- New column -->
+                <th>In Stock</th>
                 <th>Price (Dinars)</th>
               </tr>
             </thead>
@@ -149,7 +149,9 @@
                   <input type="text" class="form-control" name="name_{{ product[0] }}" value="{{ product[1] }}">
                 </td>
                 <td>{{ product[0] }}</td>
-                <td>{{ product[3] }}</td> <!-- Display stock here -->
+                <td>
+                  <input type="number" class="form-control" name="stock_{{ product[0] }}" value="{{ product[3] }}">
+                </td>
                 <td>
                   <input type="number" class="form-control" name="price_{{ product[0] }}" value="{{ product[2] }}">
                 </td>
@@ -159,14 +161,19 @@
           </table>
         </div>
         <div class="row">
-          <div class="col-6">
-            <button class="btn btn-secondary w-100 mt-3" type="submit" formaction="{{ url_for('update_product_names') }}">
-              <i class="bi bi-save me-2"></i>Update Names
+          <div class="col-md-6 col-12 mt-3">
+            <button class="btn btn-secondary w-100"
+              type="submit"
+              formaction="{{ url_for('update_names_and_stock') }}">
+              <i class="bi bi-save me-2"></i>Update Names & Stock
             </button>
           </div>
-          <div class="col-6">
-            <button class="btn btn-primary w-100 mt-3" type="submit" formaction="{{ url_for('update_prices') }}" {% if not selected_machine_status %}disabled{% endif %}>
-              <i class="bi bi-check-circle-fill me-2"></i>Update Prices
+          <div class="col-md-6 col-12 mt-3">
+            <button class="btn btn-primary w-100"
+              type="submit"
+              formaction="{{ url_for('update_prices') }}"
+              {% if not selected_machine_status %}disabled{% endif %}>
+              <i class="bi bi-currency-exchange me-2"></i>Update Prices
             </button>
             {% if not selected_machine_status %}
             <small class="text-danger d-block mt-2">This vending machine is offline. Price updates are disabled.</small>
