@@ -531,23 +531,46 @@ def update_prices():
 
     return redirect(url_for('company_dashboard'))  # Refresh page
 
-# Update Product Names (NEW ROUTE)
-@app.route('/update_product_names', methods=['POST'])
-def update_product_names():
+# Update Names & Stock (NEW! handles both name and stock in one POST)
+@app.route('/update_names_and_stock', methods=['POST'])
+def update_names_and_stock():
     if 'user' not in session or session['user']['role'] != 'company':
         return redirect(url_for('login'))
 
     company_id = session['user']['companyId']
-    machine_id = request.form.get('machine', '1')
+    machine_id = request.form.get('machine', '1')  # Get selected machine
     table_name = f"products{company_id}"
 
-    cur = mysql.connection.cursor()
+    # Prepare updates for name and stock
+    update_tuples = []
     for key, value in request.form.items():
         if key.startswith("name_"):
             product_code = key.split("_", 1)[1]
             new_name = value
-            query = f"UPDATE {table_name} SET productName = %s WHERE productCode = %s AND vendingMachineId = %s"
-            cur.execute(query, (new_name, product_code, machine_id))
+            stock_key = f"stock_{product_code}"
+            new_stock = request.form.get(stock_key)
+            # Only handle if stock is present for this product
+            if new_stock is not None:
+                update_tuples.append((new_name, new_stock, product_code))
+            else:
+                # If no stock, still update name only
+                update_tuples.append((new_name, None, product_code))
+
+    cur = mysql.connection.cursor()
+    for item in update_tuples:
+        new_name = item[0]
+        new_stock = item[1]
+        product_code = item[2]
+        # Always update product name
+        query = f"UPDATE {table_name} SET productName = %s"
+        params = [new_name]
+        # Update productStock as well if new_stock is available
+        if new_stock is not None:
+            query += ", productStock = %s"
+            params.append(new_stock)
+        query += " WHERE productCode = %s AND vendingMachineId = %s"
+        params.extend([product_code, machine_id])
+        cur.execute(query, tuple(params))
     mysql.connection.commit()
     cur.close()
 
