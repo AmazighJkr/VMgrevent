@@ -217,7 +217,7 @@ def handle_sell_product(data):
             (vending_machine_id, product_code, product_name, product_price, 'UID')
         )
 
-        # 6. INSERT to shared purchases table
+        # 6. INSERT to purchases table
         cursor.execute(
             "INSERT INTO purchases (clientId, userId, productName, price, date) VALUES (%s, %s, %s, %s, NOW())",
             (client_id, user_id, product_name, product_price)
@@ -280,6 +280,21 @@ def handle_save_cash(data):
             f"INSERT INTO {sale_table} (vendingMachineId, productCode, productName, SalePrice, methode, saleTime) VALUES (%s, %s, %s, %s, %s, NOW())",
             (vending_machine_id, product_code, product_name, product_price, 'CASH')
         )
+        # 3. Reduce product stock by 1
+        cursor.execute(
+            f"UPDATE {products_table} SET productStock = productStock - 1 WHERE vendingMachineId = %s AND productCode = %s",
+            (vending_machine_id, product_code)
+        )
+
+        mysql.connection.commit()
+        socketio.send(json.dumps({"sell_response": "Sale successful"}))
+
+    except Exception as e:
+        socketio.send(json.dumps({"sell_response": str(e)}))
+
+    finally:
+        if cursor:
+            cursor.close()
           
 # Update price functionality
 def handle_update_price(data):
