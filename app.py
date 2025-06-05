@@ -125,6 +125,8 @@ def handle_message(data):
             handle_sell_product(payload)
         elif event == "update_price":
             handle_update_price(payload)
+        elif event == "cash":
+            handle_save_cash(payload)
         elif event == "custom_command":
             handle_custom_command(payload)
         else:
@@ -208,11 +210,11 @@ def handle_sell_product(data):
             (new_balance, user_id)
         )
 
-        # 5. Log to sales table (per-vending-machine)
-        sale_table = f"selles{vending_machine_id}"
+        # 5. Log to sales table (per-company)
+        sale_table = f"selles{company_id}"
         cursor.execute(
-            f"INSERT INTO {sale_table} (vendingMachineId, productCode, productName, SalePrice, saleTime) VALUES (%s, %s, %s, %s, NOW())",
-            (vending_machine_id, product_code, product_name, product_price)
+            f"INSERT INTO {sale_table} (vendingMachineId, productCode, productName, SalePrice, methode, saleTime) VALUES (%s, %s, %s, %s, %s, NOW())",
+            (vending_machine_id, product_code, product_name, product_price, 'UID')
         )
 
         # 6. INSERT to shared purchases table
@@ -236,7 +238,49 @@ def handle_sell_product(data):
     finally:
         if cursor:
             cursor.close()
+
+def handle_save_cash(data):
+    vending_machine_code = data.get("vendingMachineCode")
+    product_code = data.get("productCode")
+    
+    cursor = None
+    try:
+        cursor = mysql.connection.cursor()
+
+        # 1. Find vending machine and company
+        cursor.execute(
+            "SELECT vendingMachineId, companyId FROM vendingmachines WHERE vendingMachineCode = %s",
+            (vending_machine_code,)
+        )
+        vending_machine = cursor.fetchone()
+        if not vending_machine:
+            socketio.send(json.dumps({"sell_response": "Invalid vending machine code"}))
+            return
+        vending_machine_id, company_id = vending_machine
+
+        products_table = f"products{company_id}"
+
+        # 2. Get product details
+        cursor.execute(
+            f"SELECT productPrice, productName, productStock FROM {products_table} WHERE vendingMachineId = %s AND productCode = %s",
+            (vending_machine_id, product_code)
+        )
+        product = cursor.fetchone()
+        if not product:
+            socketio.send(json.dumps({"sell_response": "Product not found in vending machine"}))
+            return
+        product_price, product_name, product_stock = product
+
+        if product_stock is None or product_stock <= 0:
+            socketio.send(json.dumps({"sell_response": "Product out of stock"}))
+            return
             
+        sale_table = f"selles{company_id}"
+        cursor.execute(
+            f"INSERT INTO {sale_table} (vendingMachineId, productCode, productName, SalePrice, methode, saleTime) VALUES (%s, %s, %s, %s, %s, NOW())",
+            (vending_machine_id, product_code, product_name, product_price, 'CASH')
+        )
+          
 # Update price functionality
 def handle_update_price(data):
     vending_machine_code = data.get("vendingMachineCode")
