@@ -117,6 +117,7 @@
               <th>Product Name</th>
               <th>Sale Price</th>
               <th>Sale Time</th>
+              <th>Sell Method</th>
             </tr>
           </thead>
           <tbody>
@@ -126,6 +127,15 @@
               <td>{{ sale[1] }}</td>
               <td>{{ sale[2] }} Dinars</td>
               <td>{{ sale[3] }}</td>
+              <td>
+                {% if sale[4] == 'UID' %}
+                  <span class="badge bg-primary">UID</span>
+                {% elif sale[4] == 'CASH' %}
+                  <span class="badge bg-success">CASH</span>
+                {% else %}
+                  <span class="badge bg-secondary">{{ sale[4] }}</span>
+                {% endif %}
+              </td>
             </tr>
             {% endfor %}
           </tbody>
