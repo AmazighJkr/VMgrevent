@@ -499,9 +499,9 @@ def company_dashboard():
     else:
         start_time = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
-    # Build sales query
+    # Build sales query -- UPDATED TO INCLUDE 'methode'
     sales_params = []
-    sales_query = f"SELECT productCode, productName, salePrice, saleTime FROM {sales_table} WHERE saleTime >= %s"
+    sales_query = f"SELECT productCode, productName, salePrice, saleTime, methode FROM {sales_table} WHERE saleTime >= %s"
     sales_params.append(start_time)
     if machine_id != 'all':
         sales_query += " AND vendingMachineId = %s"
