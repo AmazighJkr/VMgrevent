@@ -41,26 +41,32 @@
       border-bottom: 1px solid rgba(59, 130, 246, 0.2);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       transition: all 0.3s ease;
+      padding: 1rem 0;
+    }
+
+    .navbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .navbar-brand {
       color: white !important;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
       text-decoration: none;
+      flex: 0 0 auto;
     }
 
     .navbar-logo {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 100px;
-      height: 40px;
+      width: 160px;
+      height: 60px;
       background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-      border-radius: 8px;
+      border-radius: 12px;
       position: relative;
       overflow: hidden;
+      animation: float 3s ease-in-out infinite;
     }
 
     .navbar-logo-content {
@@ -73,25 +79,32 @@
     }
 
     .navbar-logo-content .denzer {
-      font-size: 0.8rem;
+      font-size: 1.25rem;
       font-weight: 800;
       color: white;
       letter-spacing: 0.05em;
-      margin-bottom: 1px;
+      margin-bottom: 2px;
     }
 
     .navbar-logo-content .tech {
-      font-size: 0.4rem;
+      font-size: 0.65rem;
       font-weight: 600;
       color: #fb923c;
       letter-spacing: 0.1em;
       text-transform: uppercase;
     }
 
-    .navbar-title {
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: #e5e7eb;
+    .navbar-center {
+      flex: 1;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar-right {
+      flex: 0 0 auto;
     }
 
     .nav-link {
@@ -503,19 +516,14 @@
           <div class="tech">TECHNOLOGIES</div>
         </div>
       </div>
-      <span class="navbar-title">Client Dashboard</span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border: 1px solid rgba(59, 130, 246, 0.3);">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('logout') }}">
-            <i class="bi bi-box-arrow-right"></i> Logout
-          </a>
-        </li>
-      </ul>
+    
+    <div class="navbar-center">Client Dashboard</div>
+    
+    <div class="navbar-right">
+      <a class="nav-link" href="{{ url_for('logout') }}">
+        <i class="bi bi-box-arrow-right"></i> Logout
+      </a>
     </div>
   </div>
 </nav>
