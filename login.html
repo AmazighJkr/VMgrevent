@@ -3,79 +3,630 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>Login - DENZER TECHNOLOGIES</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            height: 100vh;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1f2937 0%, #1e40af 50%, #000000 100%);
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1487088678257-3a541e6e3922?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjB0ZWNoJTIwcGF0dGVybnxlbnwwfHx8Ymx1ZXwxNzQ5MTUyMjUxfDA&ixlib=rb-4.1.0&q=85') center/cover;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        /* Login Container */
         .login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 24px;
+            padding: 3rem;
             width: 100%;
-            max-width: 400px;
+            max-width: 440px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease-out;
         }
-        .login-container h2 {
+
+        /* Logo Section */
+        .logo-section {
             text-align: center;
-            margin-bottom: 1.5rem;
-            color: #333;
+            margin-bottom: 2.5rem;
         }
-        .alert {
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo::before {
+            content: '⚡';
+            font-size: 2rem;
+            color: white;
+        }
+
+        .logo-text h1 {
+            color: white;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.25rem;
+        }
+
+        .logo-text p {
+            color: #60a5fa;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            color: #fca5a5;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
             display: none;
+        }
+
+        /* Form Styles */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .form-label {
+            color: #e5e7eb;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-left: 0.25rem;
+        }
+
+        .form-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Remember Me */
+        .remember-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+        }
+
+        .remember-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            position: relative;
+        }
+
+        .checkbox:checked {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            border-color: #3b82f6;
+        }
+
+        .checkbox:checked::before {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .remember-label {
+            color: #d1d5db;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: #60a5fa;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            color: #93c5fd;
+        }
+
+        /* Login Button */
+        .login-btn {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .login-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Loading State */
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            width: 20px;
+            height: 20px;
+            margin-top: -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Divider */
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+        }
+
+        .divider span {
+            background: linear-gradient(135deg, #1f2937, #1e40af);
+            color: #9ca3af;
+            padding: 0 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Alternative Login */
+        .alt-login {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .alt-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.75rem;
+            color: #d1d5db;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .alt-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #d1d5db;
+            text-decoration: none;
+        }
+
+        /* Footer */
+        .login-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .signup-text {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        .signup-link {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .signup-link:hover {
+            color: #93c5fd;
+        }
+
+        /* Back to Home */
+        .back-home {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 20;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .login-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+
+            .back-home {
+                top: 1rem;
+                left: 1rem;
+            }
+
+            .logo-text h1 {
+                font-size: 1.75rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Back to Home Button -->
+    <div class="back-home">
+        <a href="javascript:history.back()" class="back-btn">
+            <span>←</span>
+            Back to Home
+        </a>
+    </div>
 
-<div class="login-container">
-    <h2>Login</h2>
-    <div id="error-message" class="alert alert-danger"></div>
-    <form id="login-form">
-        <div class="mb-3">
-            <label class="form-label">Username</label>
-            <input type="text" id="username" class="form-control" placeholder="Enter username" required>
+    <!-- Login Container -->
+    <div class="login-container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo"></div>
+            <div class="logo-text">
+                <h1>DENZER</h1>
+                <p>TECHNOLOGIES</p>
+            </div>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input type="password" id="password" class="form-control" placeholder="Enter password" required>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
-    </form>
-    <p class="text-center mt-3">
-        Don't have an account? <a href="#">Register</a>
-    </p>
-</div>
 
-<script>
-    document.getElementById("login-form").addEventListener("submit", async function(event) {
-        event.preventDefault();
+        <!-- Error Message -->
+        <div id="error-message" class="error-message"></div>
+
+        <!-- Login Form -->
+        <form class="login-form" id="login-form">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    class="form-input"
+                    placeholder="Enter your username"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input"
+                    placeholder="Enter your password"
+                    required
+                />
+            </div>
+
+            <div class="remember-section">
+                <div class="remember-group">
+                    <input 
+                        type="checkbox" 
+                        id="remember" 
+                        name="remember" 
+                        class="checkbox"
+                    />
+                    <label for="remember" class="remember-label">Remember me</label>
+                </div>
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="login-btn" id="login-btn">
+                Sign In to DENZER
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider">
+            <span>or continue with</span>
+        </div>
+
+        <!-- Alternative Login Options -->
+        <div class="alt-login">
+            <a href="#" class="alt-btn">
+                <span>G</span>
+                Google
+            </a>
+            <a href="#" class="alt-btn">
+                <span>M</span>
+                Microsoft
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-footer">
+            <p class="signup-text">
+                Don't have an account? 
+                <a href="#" class="signup-link">Sign up here</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Form handling with Flask API integration
+        document.getElementById("login-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+            const loginBtn = document.getElementById("login-btn");
+            
+            // Add loading state
+            loginBtn.classList.add("loading");
+            loginBtn.textContent = "Signing In...";
+            loginBtn.disabled = true;
+            
+            // Hide previous error messages
+            errorMessage.style.display = "none";
+            
+            try {
+                const response = await fetch("/login", {  // Use relative URL for Flask API
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password })
+                });
         
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        const errorMessage = document.getElementById("error-message");
+                const data = await response.json();
         
-        const response = await fetch("/login", {  // Use relative URL
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password })
+                if (response.ok) {
+                    window.location.href = data.redirect;  // Redirect on success
+                } else {
+                    errorMessage.textContent = data.error;
+                    errorMessage.style.display = "block";
+                }
+            } catch (error) {
+                errorMessage.textContent = "Network error. Please try again.";
+                errorMessage.style.display = "block";
+            } finally {
+                // Remove loading state
+                loginBtn.classList.remove("loading");
+                loginBtn.textContent = "Sign In to DENZER";
+                loginBtn.disabled = false;
+            }
         });
-    
-        const data = await response.json();
-    
-        if (response.ok) {
-            window.location.href = data.redirect;  // Fix the redirect issue
-        } else {
-            errorMessage.textContent = data.error;
-            errorMessage.style.display = "block";
-        }
-    });
-</script>
 
+        // Input focus effects
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // Enhanced checkbox styling
+        document.getElementById('remember').addEventListener('change', function() {
+            if (this.checked) {
+                this.style.background = 'linear-gradient(135deg, #3b82f6, #1e40af)';
+                this.style.borderColor = '#3b82f6';
+            } else {
+                this.style.background = 'transparent';
+                this.style.borderColor = 'rgba(59, 130, 246, 0.5)';
+            }
+        });
+
+        // 3D tilt effect on mouse move
+        document.addEventListener('mousemove', function(e) {
+            const container = document.querySelector('.login-container');
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+            
+            container.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        // Reset transform when mouse leaves
+        document.addEventListener('mouseleave', function() {
+            const container = document.querySelector('.login-container');
+            container.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        });
+
+        // Add ripple effect to buttons
+        document.querySelectorAll('.login-btn, .alt-btn, .back-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
