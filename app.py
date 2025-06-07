@@ -30,10 +30,9 @@ app.config["MYSQL_CONNECT_TIMEOUT"] = 30
 
 mysql = MySQL(app)
 
-# Redirect to login page
 @app.route('/')
 def home():
-    return redirect(url_for('login'))
+    return render_template('main.html')
 
 # Helper function to validate table names
 def validate_table_name(table_name):
