@@ -60,20 +60,45 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #3b82f6, #1e40af);
-            border-radius: 16px;
+            width: 140px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            border-radius: 12px;
             margin-bottom: 1rem;
             position: relative;
             overflow: hidden;
             animation: float 3s ease-in-out infinite;
+            padding: 0.5rem;
         }
 
-        .logo::before {
-            content: '⚡';
-            font-size: 2rem;
+        .logo-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .logo-content .denzer {
+            font-size: 1.2rem;
+            font-weight: 800;
             color: white;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
+        }
+
+        .logo-content .tech {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: #fb923c;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Hide the separate logo text since it's now in the logo */
+        .logo-text {
+            display: none;
         }
 
         .logo-text h1 {
@@ -416,10 +441,11 @@
     <div class="login-container">
         <!-- Logo Section -->
         <div class="logo-section">
-            <div class="logo"></div>
-            <div class="logo-text">
-                <h1>DENZER</h1>
-                <p>TECHNOLOGIES</p>
+            <div class="logo">
+                <div class="logo-content">
+                    <div class="denzer">DENZER</div>
+                    <div class="tech">TECHNOLOGIES</div>
+                </div>
             </div>
         </div>
 
