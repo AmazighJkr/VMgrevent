@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DENZER TECHNOLOGIES - Future of Vending Solutions</title>
+    <title>DENZER TECHNOLOGIES - Au Cœur de la Science et de l'Innovation</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-            background: linear-gradient(135deg, #1f2937 0%, #1e40af 50%, #000000 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #000000 100%);
             color: white;
             overflow-x: hidden;
             min-height: 100vh;
@@ -26,15 +26,15 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(15, 23, 42, 0.98);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
             padding: 1rem 2rem;
             transition: all 0.3s ease;
         }
 
         .navbar.scrolled {
-            background: rgba(15, 23, 42, 0.98);
+            background: rgba(15, 23, 42, 0.99);
         }
 
         .nav-container {
@@ -56,13 +56,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(135deg, #4F46E5, #3B82F6);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
             border-radius: 8px;
             font-weight: bold;
             color: white;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .nav-logo-text {
@@ -72,17 +72,17 @@
 
         .nav-logo-main {
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 800;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             line-height: 1;
         }
 
         .nav-logo-sub {
-            color: #EF4444;
-            font-size: 1.3rem;
+            color: white;
+            font-size: 1.4rem;
             font-weight: 800;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             line-height: 1;
         }
 
@@ -95,31 +95,41 @@
         }
 
         .nav-menu {
+            flex: 1;
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 2.5rem;
             align-items: center;
+            justify-content: center; 
         }
 
         .nav-link {
-            color: #e5e7eb;
+            color: #e2e8f0;
             text-decoration: none;
             font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            padding: 0.5rem 0;
             position: relative;
         }
 
         .nav-link:hover {
-            color: #60a5fa;
-            background: rgba(59, 130, 246, 0.1);
+            color: #0ea5e9;
         }
 
         .nav-link.active {
-            color: #60a5fa;
+            color: #0ea5e9;
         }
 
+        .nav-phone {
+            color: #0ea5e9;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+        
         .nav-login-btn {
             background: linear-gradient(135deg, #4F46E5, #3B82F6);
             color: white;
@@ -129,8 +139,9 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+            margin-left: 1.5rem;
+            white-space: nowrap;
         }
-
         .nav-login-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
@@ -163,7 +174,7 @@
             right: 0;
             background: rgba(15, 23, 42, 0.98);
             backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(59, 130, 246, 0.3);
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
             padding: 1rem;
         }
 
@@ -178,18 +189,20 @@
         }
 
         .mobile-nav-link {
-            color: #e5e7eb;
+            color: #e2e8f0;
             text-decoration: none;
             font-weight: 500;
             padding: 1rem;
             border-radius: 8px;
             transition: all 0.3s ease;
             text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .mobile-nav-link:hover {
-            color: #60a5fa;
-            background: rgba(59, 130, 246, 0.1);
+            color: #0ea5e9;
+            background: rgba(14, 165, 233, 0.1);
         }
 
         /* Hero Section */
@@ -200,6 +213,7 @@
             align-items: center;
             justify-content: center;
             padding-top: 5rem;
+            background: radial-gradient(ellipse at center, rgba(14, 165, 233, 0.1) 0%, transparent 50%);
         }
 
         .hero-bg {
@@ -208,17 +222,12 @@
             z-index: 0;
         }
 
-        .hero-bg img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.2;
-        }
-
-        .hero-bg-overlay {
+        .hero-bg::before {
+            content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(30,64,175,0.5), rgba(0,0,0,0.8));
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.9));
+            z-index: 1;
         }
 
         .hero-content {
@@ -230,89 +239,79 @@
             text-align: center;
         }
 
-        .hero-title {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(to right, #ffffff, #dbeafe, #93c5fd);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.1;
-        }
-
-        .hero-title-highlight {
-            color: #60a5fa;
-        }
-
-        .hero-description {
-            font-size: 1.25rem;
-            color: #d1d5db;
+        .hero-tagline {
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #94a3b8;
             margin-bottom: 2rem;
-            max-width: 48rem;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            color: white;
+            line-height: 1.1;
+            letter-spacing: 2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 3rem;
+            line-height: 1.4;
+        }
+
+        .hero-subtitle .text-orange {
+            color: #f97316;
+        }
+
+        .hero-subtitle .text-red {
+            color: #ef4444;
+        }
+
+        .hero-subtitle .text-green {
+            color: #22c55e;
+        }
+
+        .hero-subtitle .text-gray {
+            color: #94a3b8;
         }
 
         .hero-buttons {
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
             justify-content: center;
             align-items: center;
         }
 
         .btn-primary {
-            background: linear-gradient(to right, #4F46E5, #3B82F6);
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
             color: white;
-            padding: 1rem 2rem;
-            border-radius: 1rem;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
             font-weight: 600;
-            font-size: 1.125rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: all 0.3s ease;
-            box-shadow: 0 25px 50px rgba(79, 70, 229, 0.25);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
             text-decoration: none;
             border: none;
             cursor: pointer;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 35px 60px rgba(79, 70, 229, 0.4);
-        }
-
-        .btn-secondary {
-            border: 2px solid #4F46E5;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 1rem;
-            font-weight: 600;
-            font-size: 1.125rem;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            background: transparent;
-            cursor: pointer;
-        }
-
-        .btn-secondary:hover {
-            background: #4F46E5;
-            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(14, 165, 233, 0.4);
         }
 
         /* Welcome Section */
         .welcome-section {
-            padding: 5rem 0;
+            padding: 6rem 0;
             position: relative;
-        }
-
-        .welcome-bg {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to right, rgba(79, 70, 229, 0.1), transparent, rgba(79, 70, 229, 0.1));
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.9));
         }
 
         .container {
@@ -332,15 +331,12 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1.5rem;
-            background: linear-gradient(to right, #ffffff, #93c5fd);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: white;
         }
 
         .section-description {
-            font-size: 1.25rem;
-            color: #d1d5db;
+            font-size: 1.2rem;
+            color: #cbd5e1;
             max-width: 48rem;
             margin: 0 auto;
             line-height: 1.6;
@@ -355,7 +351,7 @@
         .feature-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(79, 70, 229, 0.2);
+            border: 1px solid rgba(148, 163, 184, 0.2);
             border-radius: 1rem;
             padding: 2rem;
             text-align: center;
@@ -365,12 +361,13 @@
         .feature-card:hover {
             background: rgba(255, 255, 255, 0.1);
             transform: translateY(-5px);
+            border-color: rgba(14, 165, 233, 0.3);
         }
 
         .feature-icon {
             width: 4rem;
             height: 4rem;
-            background: linear-gradient(to right, #4F46E5, #3B82F6);
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
             border-radius: 1rem;
             display: flex;
             align-items: center;
@@ -387,25 +384,13 @@
         }
 
         .feature-description {
-            color: #d1d5db;
+            color: #cbd5e1;
         }
 
         /* Services Section */
         .services-section {
-            padding: 5rem 0;
-            position: relative;
-        }
-
-        .services-bg {
-            position: absolute;
-            inset: 0;
-        }
-
-        .services-bg img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.05;
+            padding: 6rem 0;
+            background: rgba(30, 41, 59, 0.5);
         }
 
         .services-grid {
@@ -417,14 +402,15 @@
         .service-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(79, 70, 229, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.2);
             border-radius: 1.5rem;
             overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .service-card:hover {
-            border-color: rgba(79, 70, 229, 0.5);
+            border-color: rgba(14, 165, 233, 0.4);
+            transform: translateY(-5px);
         }
 
         .service-image {
@@ -450,7 +436,7 @@
         .service-icon {
             width: 4rem;
             height: 4rem;
-            background: linear-gradient(to right, #4F46E5, #3B82F6);
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
             border-radius: 1rem;
             display: flex;
             align-items: center;
@@ -467,7 +453,7 @@
         }
 
         .service-description {
-            color: #d1d5db;
+            color: #cbd5e1;
             font-size: 1.125rem;
             line-height: 1.6;
             margin-bottom: 1.5rem;
@@ -480,18 +466,20 @@
         .service-features li {
             display: flex;
             align-items: center;
-            color: #93c5fd;
+            color: #0ea5e9;
             margin-bottom: 0.5rem;
         }
 
         .service-features li::before {
-            content: "⭐";
+            content: "✓";
             margin-right: 0.5rem;
+            font-weight: bold;
         }
 
         /* Products Section */
         .products-section {
-            padding: 5rem 0;
+            padding: 6rem 0;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.8));
         }
 
         .products-grid {
@@ -503,14 +491,15 @@
         .product-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(79, 70, 229, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.2);
             border-radius: 1.5rem;
             overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .product-card:hover {
-            border-color: rgba(79, 70, 229, 0.5);
+            border-color: rgba(14, 165, 233, 0.4);
+            transform: translateY(-5px);
         }
 
         .product-image {
@@ -541,7 +530,7 @@
         }
 
         .product-description {
-            color: #d1d5db;
+            color: #cbd5e1;
             margin-bottom: 1.5rem;
         }
 
@@ -555,19 +544,7 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.875rem;
-            color: #93c5fd;
-        }
-
-        /* Contact Section */
-        .contact-section {
-            padding: 5rem 0;
-            position: relative;
-        }
-
-        .contact-bg {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to right, rgba(79, 70, 229, 0.2), transparent, rgba(79, 70, 229, 0.2));
+            color: #0ea5e9;
         }
 
         .contact-grid {
@@ -579,7 +556,7 @@
         .contact-form {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(79, 70, 229, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.2);
             border-radius: 1.5rem;
             padding: 2rem;
         }
@@ -601,7 +578,7 @@
         .form-input {
             width: 100%;
             background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(79, 70, 229, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.3);
             border-radius: 0.75rem;
             padding: 0.75rem 1rem;
             color: white;
@@ -610,18 +587,18 @@
         }
 
         .form-input::placeholder {
-            color: #9ca3af;
+            color: #94a3b8;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #4F46E5;
+            border-color: #0ea5e9;
         }
 
         .form-textarea {
             width: 100%;
             background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(79, 70, 229, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.3);
             border-radius: 0.75rem;
             padding: 0.75rem 1rem;
             color: white;
@@ -633,12 +610,12 @@
         }
 
         .form-textarea::placeholder {
-            color: #9ca3af;
+            color: #94a3b8;
         }
 
         .form-textarea:focus {
             outline: none;
-            border-color: #4F46E5;
+            border-color: #0ea5e9;
         }
 
         .contact-info {
@@ -650,7 +627,7 @@
         .contact-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(79, 70, 229, 0.3);
+            border: 1px solid rgba(148, 163, 184, 0.2);
             border-radius: 1.5rem;
             padding: 2rem;
         }
@@ -672,7 +649,7 @@
         .contact-icon {
             width: 3rem;
             height: 3rem;
-            background: linear-gradient(to right, #4F46E5, #3B82F6);
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
             border-radius: 0.75rem;
             display: flex;
             align-items: center;
@@ -681,7 +658,7 @@
         }
 
         .contact-details p:first-child {
-            color: #9ca3af;
+            color: #94a3b8;
             font-size: 0.875rem;
         }
 
@@ -694,7 +671,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
-            color: #d1d5db;
+            color: #cbd5e1;
         }
 
         .hours-item {
@@ -703,6 +680,16 @@
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                gap: 1.5rem;
+            }
+            
+            .nav-link {
+                font-size: 0.8rem;
+            }
+        }
+
         @media (max-width: 767px) {
             .nav-menu {
                 display: none;
@@ -712,12 +699,12 @@
                 display: flex;
             }
 
-            .hero-buttons {
-                flex-direction: column;
-            }
-
             .hero-title {
                 font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
             }
 
             .section-title {
@@ -744,6 +731,10 @@
             .nav-logo-tagline {
                 font-size: 0.7rem;
             }
+
+            .nav-phone {
+                font-size: 0.9rem;
+            }
         }
 
         /* Animations */
@@ -761,6 +752,26 @@
         .animate-on-scroll {
             animation: fadeInUp 0.8s ease-out;
         }
+
+        /* Search Icon */
+        .search-icon {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+        }
+
+        .search-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #0ea5e9;
+        }
     </style>
 </head>
 <body>
@@ -768,7 +779,6 @@
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="#home" class="nav-logo">
-                <div class="nav-logo-icon">D</div>
                 <div class="nav-logo-text">
                     <div class="nav-logo-main">DENZER</div>
                     <div class="nav-logo-sub">TECHNOLOGIES</div>
@@ -777,9 +787,10 @@
             </a>
             
             <ul class="nav-menu">
-                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#home" class="nav-link active">Accueil</a></li>
+                <li><a href="#entreprise" class="nav-link">Entreprise</a></li>
                 <li><a href="#services" class="nav-link">Services</a></li>
-                <li><a href="#products" class="nav-link">Products</a></li>
+                <li><a href="#products" class="nav-link">Produits</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
             
@@ -794,9 +805,10 @@
         
         <div class="mobile-menu" id="mobile-menu">
             <div class="mobile-nav-links">
-                <a href="#home" class="mobile-nav-link">Home</a>
+                <a href="#home" class="mobile-nav-link">Accueil</a>
+                <a href="#entreprise" class="mobile-nav-link">Entreprise</a>
                 <a href="#services" class="mobile-nav-link">Services</a>
-                <a href="#products" class="mobile-nav-link">Products</a>
+                <a href="#products" class="mobile-nav-link">Produits</a>
                 <a href="#contact" class="mobile-nav-link">Contact</a>
                 <a href="/login" class="mobile-nav-link">Login</a>
             </div>
@@ -805,53 +817,47 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-bg">
-            <img src="https://evending.com/cdn/shop/files/SnackandDrinkCombinationVendingMachineMULTIZONE5W_HERO_2048x2048_9b7f0307-2812-4ba2-93b1-19cc1ad5d9eb_2048x2048.webp" alt="Modern Technology">
-            <div class="hero-bg-overlay"></div>
-        </div>
+        <div class="hero-bg"></div>
         <div class="hero-content">
-            <h1 class="hero-title">
-                Future of<br>
-                <span class="hero-title-highlight">Vending Solutions</span>
-            </h1>
-            <p class="hero-description">
-                DENZER TECHNOLOGIES delivers cutting-edge spring-based vending machines with professional installation and maintenance services for modern businesses.
-            </p>
+            <div class="hero-tagline">AU CŒUR DE LA SCIENCE ET DE L'INNOVATION</div>
+            <h1 class="hero-title">DENZER TECHNOLOGIES</h1>
+            <div class="hero-subtitle">
+                <span class="text-orange">Informatique</span><span class="text-gray">, </span>
+                <span class="text-red">Électronique</span><span class="text-gray">, </span>
+                <span class="text-green">Maintenance & Consulting</span>
+            </div>
             <div class="hero-buttons">
-                <a href="#products" class="btn-primary">
-                    <span>Explore Products</span>
-                    <span>→</span>
-                </a>
-                <a href="#contact" class="btn-secondary">Get Quote</a>
+                <a href="#services" class="btn-primary">En Savoir Plus</a>
             </div>
         </div>
     </section>
 
     <!-- Welcome Section -->
-    <section class="welcome-section">
-        <div class="welcome-bg"></div>
+    <section id="entreprise" class="welcome-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Welcome to Excellence</h2>
+                <h2 class="section-title">Notre Excellence</h2>
                 <p class="section-description">
-                    For over a decade, DENZER TECHNOLOGIES has been the trusted partner for businesses seeking reliable, modern vending solutions. We combine cutting-edge technology with unmatched service quality.
+                    Depuis plus d'une décennie, DENZER TECHNOLOGIES est le partenaire de confiance pour les entreprises 
+                    recherchant des solutions technologiques fiables et modernes. Nous combinons une technologie de pointe 
+                    avec une qualité de service inégalée.
                 </p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🏆</div>
-                    <h3 class="feature-title">Industry Leader</h3>
-                    <p class="feature-description">Pioneering advanced vending technology solutions</p>
+                    <h3 class="feature-title">Leader du Secteur</h3>
+                    <p class="feature-description">Pionnier des solutions technologiques avancées</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🛡️</div>
-                    <h3 class="feature-title">Trusted Service</h3>
-                    <p class="feature-description">Reliable installation and maintenance you can count on</p>
+                    <h3 class="feature-title">Service de Confiance</h3>
+                    <p class="feature-description">Installation et maintenance fiables sur lesquelles vous pouvez compter</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
-                    <h3 class="feature-title">Innovation First</h3>
-                    <p class="feature-description">Spring-based mechanisms for optimal performance</p>
+                    <h3 class="feature-title">Innovation d'Abord</h3>
+                    <p class="feature-description">Mécanismes avancés pour des performances optimales</p>
                 </div>
             </div>
         </div>
@@ -859,48 +865,47 @@
 
     <!-- Services Section -->
     <section id="services" class="services-section">
-        <div class="services-bg">
-            <img src="https://images.unsplash.com/photo-1487088678257-3a541e6e3922?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjB0ZWNoJTIwcGF0dGVybnxlbnwwfHx8Ymx1ZXwxNzQ5MTUyMjUxfDA&ixlib=rb-4.1.0&q=85" alt="Tech Pattern">
-        </div>
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Our Services</h2>
+                <h2 class="section-title">Nos Services</h2>
                 <p class="section-description">
-                    Comprehensive vending machine solutions from installation to ongoing maintenance
+                    Solutions technologiques complètes de l'installation à la maintenance continue
                 </p>
             </div>
             <div class="services-grid">
                 <div class="service-card">
                     <div class="service-image">
-                        <img src="https://images.pexels.com/photos/32391503/pexels-photo-32391503.jpeg" alt="Professional Installation">
+                        <img src="https://images.pexels.com/photos/32391503/pexels-photo-32391503.jpeg" alt="Installation Professionnelle">
                     </div>
                     <div class="service-content">
                         <div class="service-icon">⚙️</div>
-                        <h3 class="service-title">Professional Installation</h3>
+                        <h3 class="service-title">Installation Professionnelle</h3>
                         <p class="service-description">
-                            Expert installation services ensuring your vending machines are properly positioned, connected, and optimized for maximum performance and customer satisfaction.
+                            Services d'installation expert garantissant que vos équipements sont correctement positionnés, 
+                            connectés et optimisés pour des performances maximales et la satisfaction client.
                         </p>
                         <ul class="service-features">
-                            <li>Site Assessment</li>
-                            <li>Professional Setup</li>
-                            <li>Testing & Calibration</li>
+                            <li>Évaluation du Site</li>
+                            <li>Configuration Professionnelle</li>
+                            <li>Tests & Calibrage</li>
                         </ul>
                     </div>
                 </div>
                 <div class="service-card">
                     <div class="service-image">
-                        <img src="https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg" alt="Maintenance Service">
+                        <img src="https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg" alt="Service de Maintenance">
                     </div>
                     <div class="service-content">
                         <div class="service-icon">🔧</div>
-                        <h3 class="service-title">Ongoing Maintenance</h3>
+                        <h3 class="service-title">Maintenance Continue</h3>
                         <p class="service-description">
-                            Comprehensive maintenance programs to keep your vending machines running smoothly, minimizing downtime and maximizing profitability with regular service schedules.
+                            Programmes de maintenance complets pour maintenir vos équipements en fonctionnement optimal, 
+                            minimisant les temps d'arrêt et maximisant la rentabilité avec des calendriers de service réguliers.
                         </p>
                         <ul class="service-features">
-                            <li>Preventive Care</li>
-                            <li>Emergency Repairs</li>
-                            <li>Performance Optimization</li>
+                            <li>Soins Préventifs</li>
+                            <li>Réparations d'Urgence</li>
+                            <li>Optimisation des Performances</li>
                         </ul>
                     </div>
                 </div>
@@ -912,83 +917,86 @@
     <section id="products" class="products-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Vending Machine Models</h2>
+                <h2 class="section-title">Nos Produits</h2>
                 <p class="section-description">
-                    Discover our premium selection of spring-based vending machines designed for reliability and performance
+                    Découvrez notre sélection premium d'équipements technologiques conçus pour la fiabilité et la performance
                 </p>
             </div>
             <div class="products-grid">
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1618506557292-ec1862b3c506" alt="Premium Combo Vending Machine">
+                        <img src="https://images.unsplash.com/photo-1618506557292-ec1862b3c506" alt="Système Premium">
                     </div>
                     <div class="product-content">
-                        <h3 class="product-title">DT-3000 Premium Combo</h3>
+                        <h3 class="product-title">DT-3000 Système Premium</h3>
                         <p class="product-description">
-                            Our flagship model featuring advanced spring dispensing technology for both snacks and beverages. Perfect for high-traffic locations with dual functionality.
+                            Notre modèle phare doté d'une technologie de distribution avancée. 
+                            Parfait pour les emplacements à fort trafic avec une fonctionnalité double.
                         </p>
                         <div class="product-specs">
                             <div class="product-spec">
-                                <span>Capacity:</span>
-                                <span>72 Products</span>
+                                <span>Capacité:</span>
+                                <span>72 Unités</span>
                             </div>
                             <div class="product-spec">
-                                <span>Payment:</span>
-                                <span>Cashless & Cash</span>
+                                <span>Paiement:</span>
+                                <span>Sans Contact & Espèces</span>
                             </div>
                             <div class="product-spec">
-                                <span>Technology:</span>
-                                <span>Smart Spring System</span>
+                                <span>Technologie:</span>
+                                <span>Système Intelligent</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="https://images.pexels.com/photos/999296/pexels-photo-999296.jpeg" alt="Smart Snack Vending Machine">
+                        <img src="https://images.pexels.com/photos/999296/pexels-photo-999296.jpeg" alt="Système Intelligent">
                     </div>
                     <div class="product-content">
-                        <h3 class="product-title">DT-2500 Smart Snack</h3>
+                        <h3 class="product-title">DT-2500 Système Intelligent</h3>
                         <p class="product-description">
-                            Specialized snack vending machine with precision spring mechanisms ensuring gentle product delivery and maximum customer satisfaction.
+                            Système spécialisé avec mécanismes de précision garantissant une distribution 
+                            délicate des produits et une satisfaction client maximale.
                         </p>
                         <div class="product-specs">
                             <div class="product-spec">
-                                <span>Capacity:</span>
-                                <span>45 Products</span>
+                                <span>Capacité:</span>
+                                <span>45 Unités</span>
                             </div>
                             <div class="product-spec">
-                                <span>Payment:</span>
-                                <span>Multi-Payment</span>
+                                <span>Paiement:</span>
+                                <span>Multi-Paiement</span>
                             </div>
                             <div class="product-spec">
-                                <span>Technology:</span>
-                                <span>Precision Springs</span>
+                                <span>Technologie:</span>
+                                <span>Mécanismes de Précision</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1616627062192-78e4ff454de6" alt="Beverage Pro Vending Machine">
+                        <img src="https://images.unsplash.com/photo-1616627062192-78e4ff454de6" alt="Système Pro">
                     </div>
                     <div class="product-content">
-                        <h3 class="product-title">DT-1800 Beverage Pro</h3>
+                        <h3 class="product-title">DT-1800 Système Pro</h3>
                         <p class="product-description">
-                            Dedicated beverage vending solution with temperature control and spring-assisted dispensing for cans and bottles of all sizes.
+                            Solution dédiée avec contrôle de température et distribution assistée 
+                            pour contenants de toutes tailles.
                         </p>
                         <div class="product-specs">
                             <div class="product-spec">
-                                <span>Capacity:</span>
-                                <span>36 Products</span>
+                                <span>Capacité:</span>
+                                <span>36 Unités</span>
                             </div>
                             <div class="product-spec">
-                                <span>Payment:</span>
+                                <span>Paiement:</span>
                                 <span>Digital First</span>
                             </div>
                             <div class="product-spec">
-                                <span>Technology:</span>
-                                <span>Cooling + Springs</span>
+                                <span>Technologie:</span>
+                                <span>Refroidissement Avancé</span>
                             </div>
                         </div>
                     </div>
@@ -999,67 +1007,67 @@
 
     <!-- Contact Section -->
     <section id="contact" class="contact-section">
-        <div class="contact-bg"></div>
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Get In Touch</h2>
+                <h2 class="section-title">Contactez-Nous</h2>
                 <p class="section-description">
-                    Ready to transform your business with premium vending solutions? Contact us today for a consultation.
+                    Prêt à transformer votre entreprise avec des solutions technologiques premium ? 
+                    Contactez-nous dès aujourd'hui pour une consultation.
                 </p>
             </div>
             <div class="contact-grid">
                 <div class="contact-form">
-                    <h3>Send us a Message</h3>
+                    <h3>Envoyez-nous un Message</h3>
                     <form>
                         <div class="form-grid">
-                            <input type="text" class="form-input" placeholder="First Name" required>
-                            <input type="text" class="form-input" placeholder="Last Name" required>
+                            <input type="text" class="form-input" placeholder="Prénom" required>
+                            <input type="text" class="form-input" placeholder="Nom" required>
                         </div>
-                        <input type="email" class="form-input" placeholder="Email Address" required style="margin-bottom: 1.5rem;">
-                        <input type="tel" class="form-input" placeholder="Phone Number" required style="margin-bottom: 1.5rem;">
-                        <textarea class="form-textarea" placeholder="Tell us about your vending machine needs..." rows="4"></textarea>
-                        <button type="submit" class="btn-primary" style="width: 100%;">Send Message</button>
+                        <input type="email" class="form-input" placeholder="Adresse Email" required style="margin-bottom: 1.5rem;">
+                        <input type="tel" class="form-input" placeholder="Numéro de Téléphone" required style="margin-bottom: 1.5rem;">
+                        <textarea class="form-textarea" placeholder="Parlez-nous de vos besoins technologiques..." rows="4"></textarea>
+                        <button type="submit" class="btn-primary" style="width: 100%;">Envoyer le Message</button>
                     </form>
                 </div>
                 <div class="contact-info">
                     <div class="contact-card">
-                        <h3>Contact Information</h3>
+                        <h3>Informations de Contact</h3>
                         <div class="contact-item">
                             <div class="contact-icon">📞</div>
                             <div class="contact-details">
-                                <p>Phone</p>
-                                <p>+1 (555) 123-4567</p>
+                                <p>Téléphone</p>
+                                <p>+213 34 31 26 18</p>
                             </div>
                         </div>
                         <div class="contact-item">
                             <div class="contact-icon">✉️</div>
                             <div class="contact-details">
                                 <p>Email</p>
-                                <p>info@denzertech.com</p>
+                                <p>contact@denzertech.dz</p>
                             </div>
                         </div>
                         <div class="contact-item">
                             <div class="contact-icon">📍</div>
                             <div class="contact-details">
-                                <p>Address</p>
-                                <p>123 Tech Street, Innovation City, IC 12345</p>
+                                <p>Adresse</p>
+                                <p>123 Avenue de la Technologie, Alger, Algérie</p>
                             </div>
                         </div>
                     </div>
                     <div class="contact-card">
-                        <h3>Business Hours</h3>
+                        <h3>Horaires d'Ouverture</h3>
                         <div class="hours-grid">
                             <div class="hours-item">
-                                <span>Monday - Friday</span>
-                                <span>8:00 AM - 6:00 PM</span>
+                                <span>Dimanche - Jeudi</span>
+                                <span>8:00 - 18:00</span>
                             </div>
                             <div class="hours-item">
-                                <span>Saturday</span>
-                                <span>9:00 AM - 4:00 PM</span>
+                                <span>Samedi</span>
+                                <span>9:00 - 16:00</span>
                             </div>
                             <div class="hours-item">
-                                <span>Sunday</span>
-                                <span>Emergency Only</span>
+                                <span>Vendredi</span>
+                                <span>Urgences Seulement</span>
                             </div>
                         </div>
                     </div>
@@ -1119,12 +1127,12 @@
             const originalText = submitBtn.textContent;
             
             // Loading state
-            submitBtn.textContent = 'Sending...';
+            submitBtn.textContent = 'Envoi en cours...';
             submitBtn.disabled = true;
             
             // Simulate form submission
             setTimeout(() => {
-                alert('Thank you for your message! We will get back to you soon.');
+                alert('Merci pour votre message ! Nous vous répondrons bientôt.');
                 this.reset();
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
@@ -1158,6 +1166,11 @@
             card.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0)';
             });
+        });
+
+        // Search functionality
+        document.querySelector('.search-icon').addEventListener('click', function() {
+            alert('Fonctionnalité de recherche en développement.');
         });
     </script>
 </body>
