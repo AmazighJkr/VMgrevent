@@ -14,7 +14,10 @@ from werkzeug.security import check_password_hash
 connected_vms = {}
 sid_to_code = {}
 
-app = Flask(__name__, template_folder=".")  # Look for HTML files in the same directory
+app = Flask(__name__, 
+            template_folder=".", 
+            static_folder='static',
+            static_url_path='/static')
 CORS(app)
 bcrypt = Bcrypt(app)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent")  # or "eventlet"
