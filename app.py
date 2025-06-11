@@ -442,7 +442,11 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('login'))
+    response = make_response(redirect(url_for('main')))  # Redirect to main page
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/client_dashboard', methods=['GET', 'POST'])
 def client_dashboard():
