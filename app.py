@@ -33,6 +33,10 @@ app.config["MYSQL_CONNECT_TIMEOUT"] = 30
 
 mysql = MySQL(app)
 
+@app.route('/static/<path:path>')
+def serve_static(path):
+    return send_from_directory('static', path)
+
 @app.route('/')
 def home():
     return render_template('main.html')
