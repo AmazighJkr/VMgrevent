@@ -307,31 +307,88 @@ def handle_update_price(data):
     vending_machine_code = data.get("vendingMachineCode")
     product_code = data.get("productCode")
     new_price = data.get("newPrice")
+    new_stock = data.get("newStock")
+    
+    # Input validation
+    if not all([vending_machine_code, product_code, new_price]):
+        socketio.send(json.dumps({"update_response": "Missing required fields"}))
+        return
+        
+    try:
+        new_price = float(new_price)
+        if new_price < 0:
+            socketio.send(json.dumps({"update_response": "Price cannot be negative"}))
+            return
+            
+        if new_stock is not None:
+            try:
+                new_stock = int(new_stock)
+                if new_stock < 0:
+                    socketio.send(json.dumps({"update_response": "Stock cannot be negative"}))
+                    return
+            except ValueError:
+                socketio.send(json.dumps({"update_response": "Invalid stock value"}))
+                return
+    except ValueError:
+        socketio.send(json.dumps({"update_response": "Invalid price value"}))
+        return
 
     cursor = None
     try:
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT vendingMachineId, companyId FROM vendingmachines WHERE vendingMachineCode = %s", (vending_machine_code,))
+        
+        # First check if vending machine exists
+        cursor.execute("SELECT vendingMachineId, companyId FROM vendingmachines WHERE vendingMachineCode = %s", 
+                      (vending_machine_code,))
         vending_machine = cursor.fetchone()
         
         if not vending_machine:
             socketio.send(json.dumps({"update_response": "Invalid vending machine code"}))
             return
+            
+        vending_machine_id, company_Id = vending_machine
         
-        vending_machine_id, company_Id = vending_machine  # ✅ Proper unpacking
-        
+        # Check if product exists before updating
         product_table = validate_table_name(f"products{company_Id}")
+        cursor.execute(f"SELECT productCode FROM {product_table} WHERE vendingMachineId = %s AND productCode = %s",
+                      (vending_machine_id, product_code))
+        if not cursor.fetchone():
+            socketio.send(json.dumps({"update_response": "Product not found in vending machine"}))
+            return
+            
+        # Build update query
+        query = f"UPDATE {product_table} SET productPrice = %s"
+        params = [new_price]
         
-        # ✅ Format the table name separately
-        query = f"UPDATE {product_table} SET productPrice = %s WHERE vendingMachineId = %s AND productCode = %s"
-        cursor.execute(query, (new_price, vending_machine_id, product_code))
+        # Only update stock if provided
+        if new_stock is not None:
+            query += ", productStock = %s"
+            params.append(new_stock)
+            
+        query += " WHERE vendingMachineId = %s AND productCode = %s"
+        params.extend([vending_machine_id, product_code])
         
+        cursor.execute(query, tuple(params))
         mysql.connection.commit()
-        socketio.send(json.dumps({"update_response": "Product price updated successfully"}))
+        
+        # Notify connected VM about price update
+        vm_code = vending_machine_code
+        sid = connected_vms.get(vm_code)
+        if sid:
+            updated_data = {"price": new_price}
+            if new_stock is not None:
+                updated_data["stock"] = new_stock
+            socketio.emit('update_product', {
+                'machine_id': vending_machine_id,
+                'product_code': product_code,
+                'data': updated_data
+            }, room=sid)
+            
+        socketio.send(json.dumps({"update_response": "Product updated successfully"}))
         
     except Exception as e:
-        socketio.send(json.dumps({"update_response": str(e)}))
-
+        mysql.connection.rollback()  # Rollback on error
+        socketio.send(json.dumps({"update_response": f"Error: {str(e)}"}))
     finally:
         if cursor:
             cursor.close()
