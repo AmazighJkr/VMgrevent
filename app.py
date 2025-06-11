@@ -443,7 +443,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    response = make_response(redirect(url_for('main')))  # Redirect to main page
+    response = make_response(redirect(url_for('login')))  # Redirect to login page instead of main
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
