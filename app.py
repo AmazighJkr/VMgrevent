@@ -1,7 +1,7 @@
 import pymysql
 pymysql.install_as_MySQLdb()
 
-from flask import Flask, request, jsonify, session, redirect, url_for, render_template
+from flask import Flask, request, jsonify, session, redirect, url_for, render_template, make_response
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, disconnect
 import json
@@ -10,6 +10,7 @@ from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 connected_vms = {}
 sid_to_code = {}
