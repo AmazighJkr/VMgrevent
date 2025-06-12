@@ -636,7 +636,6 @@
         document.getElementById("login-form").addEventListener("submit", async function(event) {
             event.preventDefault();
             
-            const formData = new FormData(this);
             const loginBtn = document.getElementById("login-btn");
             
             loginBtn.classList.add("loading");
@@ -644,20 +643,24 @@
             loginBtn.disabled = true;
             
             try {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const remember = document.getElementById('remember').checked;
+                
                 const response = await fetch('/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        username: formData.get('username'),
-                        password: formData.get('password'),
-                        remember: formData.get('remember') === 'on'
+                        username: username,
+                        password: password,
+                        remember: remember
                     })
                 });
-        
+            
                 const data = await response.json();
-        
+            
                 if (response.ok) {
                     window.location.href = data.redirect;
                 } else {
