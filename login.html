@@ -621,7 +621,7 @@
         const passwordToggle = document.getElementById('password-toggle');
         const passwordInput = document.getElementById('password');
         const eyeIcon = document.getElementById('eye-icon');
-
+        
         passwordToggle.addEventListener('click', function() {
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
@@ -631,32 +631,29 @@
                 eyeIcon.textContent = '👁️';
             }
         });
-
+        
         // Form handling
         document.getElementById("login-form").addEventListener("submit", async function(event) {
             event.preventDefault();
             
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
             const loginBtn = document.getElementById("login-btn");
             
+            // Add loading state
             loginBtn.classList.add("loading");
             loginBtn.textContent = "Signing In...";
             loginBtn.disabled = true;
             
+            // Hide previous error messages
+            errorMessage.style.display = "none";
+            
             try {
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                const remember = document.getElementById('remember').checked;
-                
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        password: password,
-                        remember: remember
-                    })
+                const response = await fetch("/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password })
                 });
             
                 const data = await response.json();
@@ -664,21 +661,20 @@
                 if (response.ok) {
                     window.location.href = data.redirect;
                 } else {
-                    const errorMessage = document.getElementById("error-message");
                     errorMessage.textContent = data.error;
                     errorMessage.style.display = "block";
                 }
             } catch (error) {
-                const errorMessage = document.getElementById("error-message");
                 errorMessage.textContent = "Network error. Please try again.";
                 errorMessage.style.display = "block";
             } finally {
+                // Remove loading state
                 loginBtn.classList.remove("loading");
                 loginBtn.textContent = "Sign In to DENZER";
                 loginBtn.disabled = false;
             }
         });
-
+        
         // Input focus effects
         document.querySelectorAll('.form-input').forEach(input => {
             input.addEventListener('focus', function() {
@@ -689,18 +685,7 @@
                 this.parentElement.style.transform = 'scale(1)';
             });
         });
-
-        // Enhanced checkbox styling
-        document.getElementById('remember').addEventListener('change', function() {
-            if (this.checked) {
-                this.style.background = 'linear-gradient(135deg, #0ea5e9, #06b6d4)';
-                this.style.borderColor = '#0ea5e9';
-            } else {
-                this.style.background = 'transparent';
-                this.style.borderColor = 'rgba(148, 163, 184, 0.3)';
-            }
-        });
-
+        
         // 3D tilt effect on mouse move
         document.addEventListener('mousemove', function(e) {
             const container = document.querySelector('.login-card');
@@ -716,13 +701,13 @@
             
             container.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
-
+        
         // Reset transform when mouse leaves
         document.addEventListener('mouseleave', function() {
             const container = document.querySelector('.login-card');
             container.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
         });
-
+        
         // Add ripple effect to buttons
         document.querySelectorAll('.login-btn, .social-btn, .back-btn').forEach(button => {
             button.addEventListener('click', function(e) {
@@ -754,7 +739,7 @@
                 }, 600);
             });
         });
-
+        
         // Add ripple animation
         const style = document.createElement('style');
         style.textContent = `
