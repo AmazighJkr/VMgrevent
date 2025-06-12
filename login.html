@@ -4,14 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - DENZER TECHNOLOGIES</title>
-    <meta name="description" content="Sign in to DENZER TECHNOLOGIES - Secure login portal" />
-    <meta name="author" content="DENZER TECHNOLOGIES" />
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <style>
         * {
             margin: 0;
@@ -20,12 +12,14 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #000000 100%);
-            color: white;
-            overflow-x: hidden;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1f2937 0%, #1e40af 50%, #000000 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
+            overflow: hidden;
         }
 
         /* Background Pattern */
@@ -36,72 +30,18 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 25% 25%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 75% 75%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+            background: url('/static/images/wall.jpg') center/cover;
+            opacity: 0.05;
             z-index: 0;
         }
 
-        /* Subtle pattern overlay */
-        body::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
-            background-size: 20px 20px;
-            opacity: 0.05;
-            z-index: 1;
-        }
-
-        /* Back Button */
-        .back-home {
-            position: absolute;
-            top: 2rem;
-            left: 2rem;
-            z-index: 20;
-        }
-
-        .back-btn {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            border-radius: 12px;
-            padding: 0.75rem 1.5rem;
-            color: white;
-            text-decoration: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-            color: white;
-            text-decoration: none;
-        }
-
-        /* Main Login Container */
+        /* Login Container */
         .login-container {
             position: relative;
             z-index: 10;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
-        }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(148, 163, 184, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 24px;
             padding: 3rem;
             width: 100%;
@@ -121,16 +61,16 @@
             align-items: center;
             justify-content: center;
             width: 140px;
-            height: 64px;
-            background: linear-gradient(135deg, #002642, #001a33); /* Darker gradient */
+            height: 60px;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
             border-radius: 12px;
             margin-bottom: 1rem;
             position: relative;
             overflow: hidden;
             animation: float 3s ease-in-out infinite;
             padding: 0.5rem;
-            box-shadow: 0 10px 30px rgba(0, 38, 66, 0.4); /* Darker shadow */
         }
+
         .logo-content {
             display: flex;
             flex-direction: column;
@@ -140,40 +80,40 @@
             line-height: 1;
         }
 
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .logo-main {
-            font-size: 0.9rem;
+        .logo-content .denzer {
+            font-size: 1.2rem;
             font-weight: 800;
             color: white;
-            letter-spacing: 2px;
+            letter-spacing: 0.05em;
             margin-bottom: 2px;
         }
 
-        .logo-sub {
+        .logo-content .tech {
             font-size: 0.6rem;
             font-weight: 600;
             color: #fb923c;
-            letter-spacing: 1px;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
         }
 
-        .welcome-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.5rem;
-            letter-spacing: 1px;
+        /* Hide the separate logo text since it's now in the logo */
+        .logo-text {
+            display: none;
         }
 
-        .welcome-subtitle {
-            color: #94a3b8;
-            font-size: 0.875rem;
-            letter-spacing: 0.5px;
+        .logo-text h1 {
+            color: white;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.25rem;
+        }
+
+        .logo-text p {
+            color: #60a5fa;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
         }
 
         /* Error Message */
@@ -200,18 +140,19 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            transition: transform 0.3s ease;
         }
 
         .form-label {
-            color: #e2e8f0;
+            color: #e5e7eb;
             font-size: 0.875rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-left: 0.25rem;
         }
 
         .form-input {
             background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(148, 163, 184, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 12px;
             padding: 1rem;
             color: white;
@@ -221,34 +162,14 @@
         }
 
         .form-input::placeholder {
-            color: #94a3b8;
+            color: #9ca3af;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #0ea5e9;
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
             background: rgba(255, 255, 255, 0.15);
-        }
-
-        .password-container {
-            position: relative;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .password-toggle:hover {
-            color: white;
         }
 
         /* Remember Me */
@@ -256,6 +177,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin: 0.5rem 0;
         }
 
         .remember-group {
@@ -267,7 +189,7 @@
         .checkbox {
             width: 18px;
             height: 18px;
-            border: 2px solid rgba(148, 163, 184, 0.3);
+            border: 2px solid rgba(59, 130, 246, 0.5);
             border-radius: 4px;
             background: transparent;
             cursor: pointer;
@@ -277,8 +199,8 @@
         }
 
         .checkbox:checked {
-            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
-            border-color: #0ea5e9;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            border-color: #3b82f6;
         }
 
         .checkbox:checked::before {
@@ -293,45 +215,40 @@
         }
 
         .remember-label {
-            color: #cbd5e1;
+            color: #d1d5db;
             font-size: 0.875rem;
             cursor: pointer;
-            letter-spacing: 0.5px;
         }
 
         .forgot-link {
-            color: #0ea5e9;
+            color: #60a5fa;
             text-decoration: none;
             font-size: 0.875rem;
             transition: color 0.3s ease;
-            letter-spacing: 0.5px;
         }
 
         .forgot-link:hover {
-            color: #06b6d4;
+            color: #93c5fd;
         }
 
         /* Login Button */
         .login-btn {
-            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
             color: white;
             border: none;
             border-radius: 12px;
             padding: 1rem;
             font-size: 1rem;
             font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
         }
 
         .login-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(14, 165, 233, 0.4);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
         }
 
         .login-btn:active:not(:disabled) {
@@ -372,30 +289,29 @@
             left: 0;
             right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
         }
 
         .divider span {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: #94a3b8;
+            background: linear-gradient(135deg, #1f2937, #1e40af);
+            color: #9ca3af;
             padding: 0 1rem;
             font-size: 0.875rem;
-            letter-spacing: 0.5px;
         }
 
-        /* Social Login */
-        .social-login {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        /* Alternative Login */
+        .alt-login {
+            display: flex;
             gap: 1rem;
         }
 
-        .social-btn {
+        .alt-btn {
+            flex: 1;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(148, 163, 184, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 0.75rem;
-            color: #cbd5e1;
+            color: #d1d5db;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -405,32 +321,11 @@
             transition: all 0.3s ease;
         }
 
-        .social-btn:hover {
+        .alt-btn:hover {
             background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(14, 165, 233, 0.3);
-            color: #cbd5e1;
+            border-color: rgba(59, 130, 246, 0.3);
+            color: #d1d5db;
             text-decoration: none;
-        }
-
-        .social-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .google-icon {
-            background: white;
-            color: #gray-800;
-        }
-
-        .microsoft-icon {
-            background: #0078d4;
-            color: white;
         }
 
         /* Footer */
@@ -438,28 +333,55 @@
             text-align: center;
             margin-top: 2rem;
             padding-top: 1.5rem;
-            border-top: 1px solid rgba(148, 163, 184, 0.2);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
         }
 
         .signup-text {
-            color: #94a3b8;
+            color: #9ca3af;
             font-size: 0.875rem;
-            letter-spacing: 0.5px;
         }
 
         .signup-link {
-            color: #0ea5e9;
+            color: #60a5fa;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
         }
 
         .signup-link:hover {
-            color: #06b6d4;
+            color: #93c5fd;
         }
-        .welcome-section {
-            text-align: center;
-            margin: 1.5rem 0;
+
+        /* Back to Home */
+        .back-home {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 20;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            color: white;
         }
 
         /* Animations */
@@ -490,7 +412,7 @@
 
         /* Responsive */
         @media (max-width: 640px) {
-            .login-card {
+            .login-container {
                 margin: 1rem;
                 padding: 2rem;
             }
@@ -500,12 +422,8 @@
                 left: 1rem;
             }
 
-            .welcome-title {
+            .logo-text h1 {
                 font-size: 1.75rem;
-            }
-
-            .social-login {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -513,126 +431,98 @@
 <body>
     <!-- Back to Home Button -->
     <div class="back-home">
-        <a href="/" class="back-btn">
+        <a href="/" class="back-btn">  
             <span>←</span>
             Back to Home
         </a>
     </div>
 
-    <!-- Main Login Container -->
+    <!-- Login Container -->
     <div class="login-container">
-        <div class="login-card">
-            <!-- Logo Section -->
-            <div class="logo-section">
-                <div class="logo">
-                    <div class="logo-content" style="padding-top:5px">
-                        <div class="nav-logo-main">
-                            <img src="/static/images/logo-green.png" width="auto" height="30px">
-                        </div>
-                    </div>
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo">
+                <div class="logo-content" style="padding-top:5px">
+                    <div class="nav-logo-main"><img src="/static/images/logo-green.png" width="auto" height="30px"></div>
                 </div>
             </div>
-            <div class="welcome-section">
-                <h1 class="welcome-title">Welcome Back</h1>
-                <p class="welcome-subtitle">Sign in to DENZER TECHNOLOGIES</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error-message" class="error-message"></div>
+
+        <!-- Login Form -->
+        <form class="login-form" id="login-form">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    class="form-input"
+                    placeholder="Enter your username"
+                    required
+                />
             </div>
 
-            <!-- Error Message -->
-            <div id="error-message" class="error-message"></div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input"
+                    placeholder="Enter your password"
+                    required
+                />
+            </div>
 
-            <!-- Login Form -->
-            <form class="login-form" id="login-form">
-                <div class="form-group">
-                    <label for="username" class="form-label">Username</label>
+            <div class="remember-section">
+                <div class="remember-group">
                     <input 
-                        type="text" 
-                        id="username" 
-                        name="username" 
-                        class="form-input"
-                        placeholder="Enter your username"
-                        required
+                        type="checkbox" 
+                        id="remember" 
+                        name="remember" 
+                        class="checkbox"
                     />
+                    <label for="remember" class="remember-label">Remember me</label>
                 </div>
-
-                <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <div class="password-container">
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            class="form-input"
-                            placeholder="Enter your password"
-                            required
-                        />
-                        <button type="button" class="password-toggle" id="password-toggle">
-                            <span id="eye-icon">👁️</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="remember-section">
-                    <div class="remember-group">
-                        <input 
-                            type="checkbox" 
-                            id="remember" 
-                            name="remember" 
-                            class="checkbox"
-                        />
-                        <label for="remember" class="remember-label">Remember me</label>
-                    </div>
-                    <a href="#" class="forgot-link">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="login-btn" id="login-btn">
-                    Sign In to DENZER
-                </button>
-            </form>
-
-            <!-- Divider -->
-            <div class="divider">
-                <span>or continue with</span>
+                <a href="#" class="forgot-link">Forgot password?</a>
             </div>
 
-            <!-- Social Login -->
-            <div class="social-login">
-                <a href="#" class="social-btn">
-                    <div class="social-icon google-icon">G</div>
-                    Google
-                </a>
-                <a href="#" class="social-btn">
-                    <div class="social-icon microsoft-icon">M</div>
-                    Microsoft
-                </a>
-            </div>
+            <button type="submit" class="login-btn" id="login-btn">
+                Sign In to DENZER
+            </button>
+        </form>
 
-            <!-- Footer -->
-            <div class="login-footer">
-                <p class="signup-text">
-                    Don't have an account? 
-                    <a href="#" class="signup-link">Sign up here</a>
-                </p>
-            </div>
+        <!-- Divider -->
+        <div class="divider">
+            <span>or continue with</span>
+        </div>
+
+        <!-- Alternative Login Options -->
+        <div class="alt-login">
+            <a href="#" class="alt-btn">
+                <span>G</span>
+                Google
+            </a>
+            <a href="#" class="alt-btn">
+                <span>M</span>
+                Microsoft
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-footer">
+            <p class="signup-text">
+                Don't have an account? 
+                <a href="#" class="signup-link">Sign up here</a>
+            </p>
         </div>
     </div>
 
     <script>
-        // Password toggle functionality
-        const passwordToggle = document.getElementById('password-toggle');
-        const passwordInput = document.getElementById('password');
-        const eyeIcon = document.getElementById('eye-icon');
-        
-        passwordToggle.addEventListener('click', function() {
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.textContent = '🙈';
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.textContent = '👁️';
-            }
-        });
-        
-        // Form handling
+        // Form handling with Flask API integration
         document.getElementById("login-form").addEventListener("submit", async function(event) {
             event.preventDefault();
             
@@ -650,16 +540,16 @@
             errorMessage.style.display = "none";
             
             try {
-                const response = await fetch("/login", {
+                const response = await fetch("/login", {  // Use relative URL for Flask API
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username, password })
                 });
-            
+        
                 const data = await response.json();
-            
+        
                 if (response.ok) {
-                    window.location.href = data.redirect;
+                    window.location.href = data.redirect;  // Redirect on success
                 } else {
                     errorMessage.textContent = data.error;
                     errorMessage.style.display = "block";
@@ -674,7 +564,7 @@
                 loginBtn.disabled = false;
             }
         });
-        
+
         // Input focus effects
         document.querySelectorAll('.form-input').forEach(input => {
             input.addEventListener('focus', function() {
@@ -685,10 +575,21 @@
                 this.parentElement.style.transform = 'scale(1)';
             });
         });
-        
+
+        // Enhanced checkbox styling
+        document.getElementById('remember').addEventListener('change', function() {
+            if (this.checked) {
+                this.style.background = 'linear-gradient(135deg, #3b82f6, #1e40af)';
+                this.style.borderColor = '#3b82f6';
+            } else {
+                this.style.background = 'transparent';
+                this.style.borderColor = 'rgba(59, 130, 246, 0.5)';
+            }
+        });
+
         // 3D tilt effect on mouse move
         document.addEventListener('mousemove', function(e) {
-            const container = document.querySelector('.login-card');
+            const container = document.querySelector('.login-container');
             const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -696,20 +597,20 @@
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            const rotateX = (y - centerY) / 30;
-            const rotateY = (centerX - x) / 30;
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
             
             container.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
-        
+
         // Reset transform when mouse leaves
         document.addEventListener('mouseleave', function() {
-            const container = document.querySelector('.login-card');
+            const container = document.querySelector('.login-container');
             container.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
         });
-        
+
         // Add ripple effect to buttons
-        document.querySelectorAll('.login-btn, .social-btn, .back-btn').forEach(button => {
+        document.querySelectorAll('.login-btn, .alt-btn, .back-btn').forEach(button => {
             button.addEventListener('click', function(e) {
                 const ripple = document.createElement('span');
                 const rect = this.getBoundingClientRect();
@@ -739,7 +640,7 @@
                 }, 600);
             });
         });
-        
+
         // Add ripple animation
         const style = document.createElement('style');
         style.textContent = `
