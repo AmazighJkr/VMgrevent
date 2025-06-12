@@ -87,21 +87,30 @@
     }
 
     .navbar-logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, #0ea5e9, #3b82f6);
-      border-radius: 8px;
-      font-weight: bold;
-      color: white;
-      font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 160px;  /* Increased from 140px */
+        height: 72px;  /* Increased from 64px */
+        background: linear-gradient(135deg, #002642, #001a33);
+        border-radius: 12px;
+        margin-bottom: 1.25rem;  /* Increased from 1rem */
+        position: relative;
+        overflow: hidden;
+        animation: float 3s ease-in-out infinite;
+        padding: 0.75rem;  /* Increased from 0.5rem */
+        box-shadow: 0 10px 30px rgba(0, 38, 66, 0.4);
     }
-
+    
     .navbar-logo img {
-      max-width: 100%;
-      height: auto;
+        max-width: 100%;
+        height: auto;
+        padding: 0.5rem;  /* Added padding to center the image better */
+    }
+    
+    .navbar-logo:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 38, 66, 0.4);
     }
 
     .navbar-center {
