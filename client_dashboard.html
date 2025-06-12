@@ -759,6 +759,12 @@
             row.style.animation = 'slideInUp 0.6s ease-out forwards';
         });
 
+        // Add logout handler
+        document.getElementById('logout-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = this.getAttribute('href');
+        });
+
         // Add ripple animation
         const style = document.createElement('style');
         style.textContent = `
@@ -784,6 +790,12 @@
         });
     });
 
+    // Prevent browser back button from showing sensitive pages
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
 </script>
 
 </body>
