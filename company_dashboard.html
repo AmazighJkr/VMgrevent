@@ -2,12 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Vending Machine Dashboard - DENZER TECHNOLOGIES</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <title>Client Dashboard - DENZER TECHNOLOGIES</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
     * {
       margin: 0;
@@ -16,15 +22,15 @@
     }
 
     body {
-      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #1f2937 0%, #1e40af 50%, #000000 100%);
-      min-height: 100vh;
-      color: #e5e7eb;
-      position: relative;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #000000 100%);
+      color: white;
       overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
     }
 
-    /* Background Pattern */
+    /* Background Pattern - matching main page */
     body::before {
       content: '';
       position: fixed;
@@ -32,69 +38,80 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: url('/static/images/wall.jpg') center/cover;
-      opacity: 0.03;
-      z-index: -1;
+      background: radial-gradient(circle at 25% 25%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 75% 75%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+      z-index: 0;
     }
 
-    /* Navbar Styling */
+    /* Subtle pattern overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+      background-size: 20px 20px;
+      opacity: 0.05;
+      z-index: 1;
+    }
+
+    /* Navbar Styling - matching main page */
     .navbar {
-      background: rgba(15, 23, 42, 0.95) !important;
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      transition: all 0.3s ease;
-      padding: 1rem 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(15, 23, 42, 0.98) !important;
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        padding: 0.75rem 2rem;  /* Slightly reduced padding */
+        transition: all 0.3s ease;
+        min-height: auto;      /* Let height adjust naturally */
     }
-
+    
     .navbar .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+        max-width: 96rem;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
-
+    
     .navbar-brand {
-      color: white !important;
-      text-decoration: none;
-      flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        height: 100%;
     }
-
+    
     .navbar-logo {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 160px;
-      height: 60px;
-      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-      border-radius: 12px;
-      position: relative;
-      overflow: hidden;
-      animation: float 3s ease-in-out infinite;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 140px;  /* Adjusted back to original size */
+        height: 64px;
+        background: linear-gradient(135deg, #002642, #001a33);
+        border-radius: 12px;
+        margin-bottom: 0;  /* Remove bottom margin */
+        position: relative;
+        overflow: hidden;
+        animation: float 3s ease-in-out infinite;
+        padding: 0.5rem;
+        box-shadow: 0 10px 30px rgba(0, 38, 66, 0.4);
     }
-
-    .navbar-logo-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      line-height: 1;
+    
+    .navbar-logo img {
+        max-width: 100%;
+        height: auto;
     }
-
-    .navbar-logo-content .denzer {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: white;
-      letter-spacing: 0.05em;
-      margin-bottom: 2px;
-    }
-
-    .navbar-logo-content .tech {
-      font-size: 0.65rem;
-      font-weight: 600;
-      color: #fb923c;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+    
+    .navbar-logo:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 38, 66, 0.4);
     }
 
     .navbar-center {
@@ -103,7 +120,7 @@
       font-weight: 700;
       font-size: 1.5rem;
       color: white;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      letter-spacing: 1px;
     }
 
     .navbar-right {
@@ -111,37 +128,32 @@
     }
 
     .nav-link {
-      color: #d1d5db !important;
+      color: #e2e8f0 !important;
+      text-decoration: none;
       font-weight: 500;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
       transition: all 0.3s ease;
       padding: 0.5rem 1rem !important;
       border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .nav-link:hover {
-      color: #60a5fa !important;
-      background: rgba(59, 130, 246, 0.1);
-      transform: translateY(-2px);
-    }
-
-    .btn-outline-light {
-      border: 1px solid rgba(59, 130, 246, 0.5);
-      color: #60a5fa;
-      background: rgba(59, 130, 246, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    .btn-outline-light:hover {
-      background: rgba(59, 130, 246, 0.2);
-      border-color: #3b82f6;
-      color: white;
+      color: #0ea5e9 !important;
+      background: rgba(14, 165, 233, 0.1);
       transform: translateY(-2px);
     }
 
     /* Container Styling */
     .dashboard-container {
+      position: relative;
+      z-index: 10;
       padding: 120px 20px 80px;
-      max-width: 1400px;
+      max-width: 96rem;
       margin: 0 auto;
       animation: fadeInUp 0.8s ease-out;
     }
@@ -149,20 +161,12 @@
     /* Page Title */
     .page-title {
       text-align: center;
-      margin-bottom: 1rem;
+      margin-bottom: 3rem;
       color: white;
       font-size: 2.5rem;
-      font-weight: 800;
-      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      font-weight: 700;
+      letter-spacing: 1px;
       position: relative;
-    }
-
-    .page-subtitle {
-      text-align: center;
-      margin-bottom: 3rem;
-      color: #60a5fa;
-      font-size: 1.25rem;
-      font-weight: 500;
     }
 
     .page-title::after {
@@ -171,122 +175,44 @@
       bottom: -10px;
       left: 50%;
       transform: translateX(-50%);
-      width: 100px;
+      width: 80px;
       height: 4px;
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      background: linear-gradient(90deg, #0ea5e9, #06b6d4);
       border-radius: 2px;
     }
 
-    /* Glass Card Styling */
+    /* Card Styling - matching main page glass cards */
     .glass-card {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      border-radius: 20px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 24px;
       padding: 2rem;
       margin-bottom: 2rem;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
       transition: all 0.3s ease;
       animation: slideInUp 0.6s ease-out;
     }
 
     .glass-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 35px 70px rgba(0, 0, 0, 0.4);
-      border-color: rgba(59, 130, 246, 0.4);
+      border-color: rgba(14, 165, 233, 0.3);
     }
 
     .section-title {
       color: white;
-      font-size: 1.5rem;
+      font-size: 1.875rem;
       font-weight: 700;
       margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      letter-spacing: 0.5px;
     }
 
     .section-title i {
-      color: #60a5fa;
-      font-size: 1.25rem;
-    }
-
-    /* Form Controls */
-    .form-label {
-      color: #e5e7eb;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      font-size: 0.95rem;
-    }
-
-    .form-select,
-    .form-control {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 12px;
-      color: white;
-      padding: 0.75rem 1rem;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-
-    .form-select:focus,
-    .form-control:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-    }
-
-    .form-select option {
-      background: #1f2937;
-      color: white;
-    }
-
-    /* Status Badges */
-    .status-online {
-      background: linear-gradient(135deg, #10b981, #059669) !important;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.875rem;
-      border: none;
-      animation: pulse 2s infinite;
-    }
-
-    .status-offline {
-      background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.875rem;
-      border: none;
-    }
-
-    /* Income Card */
-    .income-card {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      text-align: center;
-      padding: 2rem;
-    }
-
-    .income-amount {
-      font-size: 3rem;
-      font-weight: 800;
-      color: #10b981;
-      text-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
-      margin: 1rem 0;
-    }
-
-    .income-title {
-      color: white;
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+      color: #0ea5e9;
+      font-size: 1.5rem;
     }
 
     /* Table Styling */
@@ -301,7 +227,7 @@
     }
 
     .modern-table thead {
-      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
     }
 
     .modern-table thead th {
@@ -313,27 +239,108 @@
       position: sticky;
       top: 0;
       z-index: 10;
+      letter-spacing: 0.5px;
     }
 
     .modern-table tbody tr {
       background: rgba(255, 255, 255, 0.03);
       transition: all 0.3s ease;
-      border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
     }
 
     .modern-table tbody tr:hover {
-      background: rgba(59, 130, 246, 0.1);
+      background: rgba(14, 165, 233, 0.1);
       transform: scale(1.01);
     }
 
     .modern-table tbody td {
       padding: 1rem;
       border: none;
-      color: #e5e7eb;
+      color: #cbd5e1;
     }
 
     .modern-table tbody tr:last-child {
       border-bottom: none;
+    }
+
+    /* Status badges */
+    .status-active {
+      color: #22c55e !important;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-active::before {
+      content: '●';
+      color: #22c55e;
+      animation: pulse 2s infinite;
+    }
+
+    .status-inactive {
+      color: #ef4444 !important;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-inactive::before {
+      content: '●';
+      color: #ef4444;
+    }
+
+    /* Button Styling - matching main page */
+    .modern-btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modern-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .modern-btn:hover::before {
+      left: 100%;
+    }
+
+    .btn-activate {
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      color: white;
+      box-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
+    }
+
+    .btn-activate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-deactivate {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-deactivate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(239, 68, 68, 0.4);
     }
 
     /* Scrollable table */
@@ -353,144 +360,73 @@
     }
 
     .scrollable-table::-webkit-scrollbar-thumb {
-      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
       border-radius: 4px;
     }
 
     .scrollable-table::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(135deg, #60a5fa, #93c5fd);
+      background: linear-gradient(135deg, #06b6d4, #0ea5e9);
     }
 
-    /* Payment Method Badges */
-    .payment-uid {
-      background: linear-gradient(135deg, #3b82f6, #1e40af);
-      color: white;
-      padding: 0.375rem 0.75rem;
-      border-radius: 15px;
-      font-size: 0.75rem;
+    /* Card number styling */
+    .card-number {
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: #0ea5e9;
     }
 
-    .payment-cash {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
-      padding: 0.375rem 0.75rem;
-      border-radius: 15px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .payment-other {
-      background: linear-gradient(135deg, #6b7280, #4b5563);
-      color: white;
-      padding: 0.375rem 0.75rem;
-      border-radius: 15px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Button Styling */
-    .modern-btn {
-      padding: 0.875rem 1.5rem;
-      border: none;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .modern-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s;
-    }
-
-    .modern-btn:hover::before {
-      left: 100%;
-    }
-
-    .btn-update-stock {
-      background: linear-gradient(135deg, #6b7280, #4b5563);
-      color: white;
-    }
-
-    .btn-update-stock:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(107, 114, 128, 0.4);
-    }
-
-    .btn-update-prices {
-      background: linear-gradient(135deg, #3b82f6, #1e40af);
-      color: white;
-    }
-
-    .btn-update-prices:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
-    }
-
-    .btn-update-prices:disabled {
-      background: linear-gradient(135deg, #6b7280, #4b5563);
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    /* Product Code Styling */
-    .product-code {
+    .card-uid {
       font-family: 'Courier New', monospace;
-      background: rgba(59, 130, 246, 0.1);
-      color: #60a5fa;
+      font-size: 0.875rem;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.05);
       padding: 0.25rem 0.5rem;
       border-radius: 6px;
-      font-weight: 600;
+      display: inline-block;
+      margin-top: 0.25rem;
     }
 
-    /* Price Styling */
-    .price-display {
+    /* Balance styling */
+    .balance {
       font-weight: 700;
-      color: #fbbf24;
+      color: #f97316;
       font-size: 1.1rem;
     }
 
-    /* Footer Styling */
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #94a3b8;
+      font-style: italic;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: #475569;
+      margin-bottom: 1rem;
+    }
+
+    /* Footer Styling - matching main page */
     .modern-footer {
       background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(59, 130, 246, 0.2);
+      border-top: 1px solid rgba(148, 163, 184, 0.2);
       padding: 3rem 0 2rem;
       margin-top: 4rem;
-      color: #d1d5db;
+      color: #cbd5e1;
       text-align: center;
+      position: relative;
+      z-index: 10;
     }
 
     .modern-footer a {
-      color: #60a5fa;
+      color: #0ea5e9;
       text-decoration: none;
       transition: all 0.3s ease;
     }
 
     .modern-footer a:hover {
-      color: #93c5fd;
+      color: #06b6d4;
       transform: translateY(-2px);
     }
 
@@ -504,8 +440,8 @@
       justify-content: center;
       width: 40px;
       height: 40px;
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: rgba(14, 165, 233, 0.1);
+      border: 1px solid rgba(14, 165, 233, 0.3);
       border-radius: 50%;
       margin: 0 0.5rem;
       font-size: 1.25rem;
@@ -513,17 +449,9 @@
     }
 
     .social-links a:hover {
-      background: rgba(59, 130, 246, 0.2);
+      background: rgba(14, 165, 233, 0.2);
       transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
-    }
-
-    /* Warning Text */
-    .warning-text {
-      color: #ef4444;
-      font-size: 0.875rem;
-      margin-top: 0.5rem;
-      font-weight: 500;
+      box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
     }
 
     /* Animations */
@@ -554,11 +482,30 @@
         opacity: 1;
       }
       50% {
-        opacity: 0.7;
+        opacity: 0.5;
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
       }
     }
 
     /* Responsive Design */
+    @media (max-width: 1024px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .navbar-center {
+        font-size: 1.3rem;
+      }
+    }
+
     @media (max-width: 768px) {
       .dashboard-container {
         padding: 100px 15px 60px;
@@ -581,29 +528,12 @@
         padding: 0.75rem 0.5rem;
       }
 
-      .income-amount {
-        font-size: 2.5rem;
-      }
-
       .section-title {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
       }
 
       .navbar-center {
-        font-size: 1.25rem;
-      }
-
-      .navbar-logo {
-        width: 120px;
-        height: 45px;
-      }
-
-      .navbar-logo-content .denzer {
-        font-size: 1rem;
-      }
-
-      .navbar-logo-content .tech {
-        font-size: 0.55rem;
+        font-size: 1.1rem;
       }
     }
 
@@ -621,29 +551,16 @@
       }
 
       .modern-btn {
-        padding: 0.75rem 1rem;
-        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
       }
 
-      .income-amount {
-        font-size: 2rem;
+      .navbar {
+        padding: 1rem 0.5rem;
       }
 
       .navbar-center {
-        font-size: 1.1rem;
-      }
-
-      .navbar-logo {
-        width: 100px;
-        height: 40px;
-      }
-
-      .navbar-logo-content .denzer {
-        font-size: 0.9rem;
-      }
-
-      .navbar-logo-content .tech {
-        font-size: 0.5rem;
+        font-size: 1rem;
       }
     }
   </style>
@@ -652,204 +569,134 @@
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg fixed-top">
-  <div class="container">
-    <a class="navbar-brand" href="#">
-      <div class="navbar-logo">
-        <div class="navbar-logo-content">
-          <div class="nav-logo-main"><img src="/static/images/logo-green.png" width="auto" height="40px"></div>
+    <div class="container">
+        <a class="navbar-brand" href="#">
+             <div class="navbar-logo">
+                <img src="/static/images/logo-green.png" width="auto" height="40px">
+            </div>
+        </a>
+            
+        <div class="navbar-center">Client Dashboard</div>
+        
+        <div class="navbar-right">
+            <a class="nav-link" id="logout-link" href="{{ url_for('logout') }}">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
         </div>
-      </div>
-    </a>
-    
-    <div class="navbar-center">Company Dashboard</div>
-    
-    <div class="navbar-right">
-      <a class="btn btn-outline-light" id="logout-link" href="{{ url_for('logout') }}">
-        <i class="bi bi-box-arrow-right"></i> Logout
-      </a>
     </div>
-  </div>
 </nav>
 
 <!-- Main Content -->
 <div class="container dashboard-container">
-  <h1 class="page-title">Company Dashboard</h1>
-  <h4 class="page-subtitle">Dashboard for {{ company_name }}</h4>
+  <h1 class="page-title">Client Dashboard</h1>
 
-  <!-- Machine Selection Form -->
+  <!-- RFID Cards Section -->
   <div class="glass-card">
     <h3 class="section-title">
-      <i class="bi bi-gear-fill"></i>
-      Machine Configuration
+      <i class="bi bi-credit-card-2-front"></i>
+      Your RFID Cards
     </h3>
     
-    <form method="POST" action="{{ url_for('company_dashboard') }}">
-      <div class="row">
-        <div class="col-md-8">
-          <label for="machineSelect" class="form-label">Select Vending Machine:</label>
-          <div class="d-flex align-items-center mb-3">
-            <select class="form-select me-3" id="machineSelect" name="machine" onchange="this.form.submit()">
-              <option value="all" {% if selected_machine == 'all' %}selected{% endif %}>All Machines</option>
-              {% for machine in machines %}
-              <option value="{{ machine.id }}" {% if selected_machine|int == machine.id %}selected{% endif %}>
-                {{ machine.name }}
-              </option>
-              {% endfor %}
-            </select>
-            {% if selected_machine != 'all' %}
-            <span class="badge {{ 'status-online' if selected_machine_status else 'status-offline' }}">
-              {% if selected_machine_status %}
-                <i class="bi bi-wifi"></i> Online
-              {% else %}
-                <i class="bi bi-wifi-off"></i> Offline
-              {% endif %}
-            </span>
-            {% endif %}
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <label for="timeRange" class="form-label">Select Time Range:</label>
-          <select class="form-select mb-3" id="timeRange" name="time_range" onchange="this.form.submit()">
-            <option value="daily" {% if time_range == 'daily' %}selected{% endif %}>Daily</option>
-            <option value="weekly" {% if time_range == 'weekly' %}selected{% endif %}>Weekly</option>
-            <option value="monthly" {% if time_range == 'monthly' %}selected{% endif %}>Monthly</option>
-            <option value="yearly" {% if time_range == 'yearly' %}selected{% endif %}>Yearly</option>
-          </select>
-        </div>
+    <div id="rfid-container">
+      <div class="scrollable-table">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th>Card</th>
+              <th>Card UID</th>
+              <th>Balance</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for card in rfid_cards %}
+              <tr>
+                <td class="card-number">Card {{ loop.index }}</td>
+                <td>
+                  <div class="card-uid">{{ card.uid }}</div>
+                </td>
+                <td>
+                  <span class="balance">{{ card.balance }} Dinars</span>
+                </td>
+                <td>
+                  <span class="{{ 'status-active' if card.active else 'status-inactive' }}">
+                    {{ 'Active' if card.active else 'Inactive' }}
+                  </span>
+                </td>
+                <td>
+                  <form method="post" action="{{ url_for('client_dashboard') }}" style="display: inline;">
+                    <input type="hidden" name="uid" value="{{ card.uid }}">
+                    <input type="hidden" name="activate" value="{{ '0' if card.active else '1' }}">
+                    <button type="submit" class="modern-btn {{ 'btn-deactivate' if card.active else 'btn-activate' }}">
+                      {{ 'Deactivate' if card.active else 'Activate' }}
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="5" class="empty-state">
+                  <i class="bi bi-credit-card"></i>
+                  <div>No RFID cards found.</div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
-
-      <noscript><input type="submit" value="Apply Filters" class="modern-btn btn-update-prices"></noscript>
-    </form>
+    </div>
   </div>
 
-  <!-- Income Summary -->
-  <div class="glass-card income-card">
-    <h5 class="income-title">
-      <i class="bi bi-cash-coin me-2"></i>
-      Total Income - {{ time_range|capitalize }}
-    </h5>
-    <div class="income-amount">{{ income_total }} Dinars</div>
-  </div>
-
-  <!-- Sales Table -->
+  <!-- Purchase History Section -->
   <div class="glass-card">
     <h3 class="section-title">
-      <i class="bi bi-bar-chart-line"></i>
-      Sales History
+      <i class="bi bi-clock-history"></i>
+      Purchase History
     </h3>
     
     <div class="scrollable-table">
       <table class="modern-table">
         <thead>
           <tr>
-            <th>Product Code</th>
+            <th>Date</th>
             <th>Product Name</th>
-            <th>Sale Price</th>
-            <th>Sale Time</th>
-            <th>Payment Method</th>
+            <th>Price (Dinars)</th>
+            <th>Card Used</th>
           </tr>
         </thead>
         <tbody>
-          {% for sale in sales %}
-          <tr>
-            <td>
-              <span class="product-code">{{ sale[0] }}</span>
-            </td>
-            <td style="font-weight: 500;">{{ sale[1] }}</td>
-            <td>
-              <span class="price-display">{{ sale[2] }} Dinars</span>
-            </td>
-            <td style="color: #60a5fa; font-weight: 500;">{{ sale[3] }}</td>
-            <td>
-              {% if sale[4] == 'UID' %}
-                <span class="payment-uid">
-                  <i class="bi bi-credit-card me-1"></i>UID
-                </span>
-              {% elif sale[4] == 'CASH' %}
-                <span class="payment-cash">
-                  <i class="bi bi-cash me-1"></i>CASH
-                </span>
-              {% else %}
-                <span class="payment-other">{{ sale[4] }}</span>
-              {% endif %}
-            </td>
-          </tr>
+          {% for purchase in purchases %}
+            <tr>
+              <td>
+                <div style="color: #0ea5e9; font-weight: 500;">
+                  {{ purchase['date'].strftime('%Y-%m-%d') if purchase['date'] else '' }}
+                </div>
+                <div style="font-size: 0.875rem; color: #94a3b8;">
+                  {{ purchase['date'].strftime('%H:%M:%S') if purchase['date'] else '' }}
+                </div>
+              </td>
+              <td style="font-weight: 500;">{{ purchase['productName'] }}</td>
+              <td>
+                <span class="balance">{{ purchase['price'] }}</span>
+              </td>
+              <td>
+                <div class="card-number">Card {{ purchase['card_number'] }}</div>
+                <div class="card-uid">{{ purchase['uid'] }}</div>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="4" class="empty-state">
+                <i class="bi bi-bag"></i>
+                <div>No purchases found.</div>
+              </td>
+            </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
-
-  <!-- Editable Table Section -->
-  {% if selected_machine != 'all' %}
-  <div class="glass-card">
-    <h3 class="section-title">
-      <i class="bi bi-pencil-square"></i>
-      Edit Product Name, Stock & Price
-    </h3>
-    
-    <form method="POST">
-      <input type="hidden" name="machine" value="{{ selected_machine }}">
-      <div class="scrollable-table">
-        <table class="modern-table">
-          <thead>
-            <tr>
-              <th>Product Name</th>
-              <th>Product Code</th>
-              <th>In Stock</th>
-              <th>Price (Dinars)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product in products %}
-            <tr>
-              <td>
-                <input type="text" class="form-control" name="name_{{ product[0] }}" value="{{ product[1] }}">
-              </td>
-              <td>
-                <span class="product-code">{{ product[0] }}</span>
-              </td>
-              <td>
-                <input type="number" class="form-control" name="stock_{{ product[0] }}" value="{{ product[3] }}">
-              </td>
-              <td>
-                <input type="number" class="form-control" name="price_{{ product[0] }}" value="{{ product[2] }}">
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      
-      <div class="row mt-4">
-        <div class="col-md-6 col-12 mb-3">
-          <button class="modern-btn btn-update-stock w-100"
-            type="submit"
-            formaction="{{ url_for('update_names_and_stock') }}">
-            <i class="bi bi-save"></i>
-            Update Names & Stock
-          </button>
-        </div>
-        <div class="col-md-6 col-12 mb-3">
-          <button class="modern-btn btn-update-prices w-100"
-            type="submit"
-            formaction="{{ url_for('update_prices') }}"
-            {% if not selected_machine_status %}disabled{% endif %}>
-            <i class="bi bi-currency-exchange"></i>
-            Update Prices
-          </button>
-          {% if not selected_machine_status %}
-          <div class="warning-text">
-            <i class="bi bi-exclamation-triangle me-1"></i>
-            This vending machine is offline. Price updates are disabled.
-          </div>
-          {% endif %}
-        </div>
-      </div>
-    </form>
-  </div>
-  {% endif %}
 </div>
 
 <!-- Footer -->
@@ -871,106 +718,72 @@
 </footer>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Add ripple effect to buttons
-    document.querySelectorAll('.modern-btn').forEach(button => {
-      button.addEventListener('click', function(e) {
-        const ripple = document.createElement('span');
-        const rect = this.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-        
-        ripple.style.cssText = `
-          position: absolute;
-          width: ${size}px;
-          height: ${size}px;
-          left: ${x}px;
-          top: ${y}px;
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 50%;
-          transform: scale(0);
-          animation: ripple 0.6s ease-out;
-          pointer-events: none;
-        `;
-        
-        this.style.position = 'relative';
-        this.style.overflow = 'hidden';
-        this.appendChild(ripple);
-        
-        setTimeout(() => {
-          ripple.remove();
-        }, 600);
-      });
-    });
-
-    // Add logout handler
-    document.getElementById('logout-link').addEventListener('click', function(e) {
-      e.preventDefault();
-      // Clear history and redirect
-      window.history.pushState(null, '', '/');
-      window.history.pushState(null, '', window.location.pathname);
-      window.history.go(-1);
-      window.location.href = this.getAttribute('href');
-    });
-
-    // Prevent browser back button from showing sensitive pages
-    window.addEventListener('pageshow', function(event) {
-      if (event.persisted) {
-        window.location.reload();
-      }
-    });
-
-    // Add stagger animation to table rows
-    const tableRows = document.querySelectorAll('.modern-table tbody tr');
-    tableRows.forEach((row, index) => {
-      row.style.animationDelay = `${index * 0.1}s`;
-      row.style.animation = 'slideInUp 0.6s ease-out forwards';
-    });
-
-    // Add stagger animation to cards
-    const cards = document.querySelectorAll('.glass-card');
-    cards.forEach((card, index) => {
-      card.style.animationDelay = `${index * 0.2}s`;
-    });
-
-    // Add ripple animation
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes ripple {
-        to {
-          transform: scale(2);
-          opacity: 0;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Navbar scroll effect
-    window.addEventListener('scroll', function() {
-      const navbar = document.querySelector('.navbar');
-      if (window.scrollY > 50) {
-        navbar.style.background = 'rgba(15, 23, 42, 0.98)';
-        navbar.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.4)';
-      } else {
-        navbar.style.background = 'rgba(15, 23, 42, 0.95)';
-        navbar.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
-      }
-    });
-
-    // Form submission feedback
-    document.querySelectorAll('form').forEach(form => {
-      form.addEventListener('submit', function() {
-        const buttons = this.querySelectorAll('.modern-btn');
-        buttons.forEach(button => {
-          if (button.type === 'submit' && !button.disabled) {
-            button.style.opacity = '0.7';
-            button.innerHTML = '<i class="bi bi-hourglass-split"></i> Processing...';
-          }
+    // Add smooth scrolling and other existing scripts
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add ripple effect to buttons
+        document.querySelectorAll('.modern-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+                    
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                    
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
         });
-      });
+
+        // Add stagger animation to table rows
+        const tableRows = document.querySelectorAll('.modern-table tbody tr');
+        tableRows.forEach((row, index) => {
+            row.style.animationDelay = `${index * 0.1}s`;
+            row.style.animation = 'slideInUp 0.6s ease-out forwards';
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(15, 23, 42, 0.99)';
+                navbar.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.4)';
+            } else {
+                navbar.style.background = 'rgba(15, 23, 42, 0.98)';
+                navbar.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
+            }
+        });
     });
-  });
+
 </script>
 
 </body>
