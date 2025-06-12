@@ -637,39 +637,40 @@
         document.getElementById("login-form").addEventListener("submit", async function(event) {
             event.preventDefault();
             
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            const errorMessage = document.getElementById("error-message");
+            const formData = new FormData(this);
             const loginBtn = document.getElementById("login-btn");
             
-            // Add loading state
             loginBtn.classList.add("loading");
             loginBtn.textContent = "Signing In...";
             loginBtn.disabled = true;
             
-            // Hide previous error messages
-            errorMessage.style.display = "none";
-            
             try {
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                if (username && password) {
-                    // Simulate successful login
-                    loginBtn.textContent = "Login Successful!";
-                    setTimeout(() => {
-                        // Redirect logic would go here
-                        console.log("Redirecting to dashboard...");
-                        // window.location.href = "/dashboard";
-                    }, 1000);
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: formData.get('username'),
+                        password: formData.get('password'),
+                        remember: formData.get('remember') === 'on'
+                    })
+                });
+        
+                const data = await response.json();
+        
+                if (response.ok) {
+                    window.location.href = data.redirect;
                 } else {
-                    throw new Error("Please fill in all fields");
+                    const errorMessage = document.getElementById("error-message");
+                    errorMessage.textContent = data.error;
+                    errorMessage.style.display = "block";
                 }
             } catch (error) {
-                errorMessage.textContent = error.message || "Login failed. Please try again.";
+                const errorMessage = document.getElementById("error-message");
+                errorMessage.textContent = "Network error. Please try again.";
                 errorMessage.style.display = "block";
-                
-                // Remove loading state
+            } finally {
                 loginBtn.classList.remove("loading");
                 loginBtn.textContent = "Sign In to DENZER";
                 loginBtn.disabled = false;
