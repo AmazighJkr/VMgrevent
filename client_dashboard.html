@@ -718,7 +718,6 @@
 </footer>
 
 <script>
-    // Add smooth scrolling and other existing scripts
     document.addEventListener('DOMContentLoaded', function() {
         // Add ripple effect to buttons
         document.querySelectorAll('.modern-btn').forEach(button => {
@@ -759,12 +758,6 @@
             row.style.animation = 'slideInUp 0.6s ease-out forwards';
         });
 
-        // Add logout handler
-        document.getElementById('logout-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = this.getAttribute('href');
-        });
-
         // Add ripple animation
         const style = document.createElement('style');
         style.textContent = `
@@ -788,13 +781,6 @@
                 navbar.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)';
             }
         });
-    });
-
-    // Prevent browser back button from showing sensitive pages
-    window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
-            window.location.reload();
-        }
     });
 </script>
 
